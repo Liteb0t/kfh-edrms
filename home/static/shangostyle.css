@@ -1,0 +1,186 @@
+.dashboard-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.welcome-message {
+  text-align: center;
+  color: #3F3F3F;
+  margin-bottom: 30px;
+}
+
+.upload-documents {
+  background-color: #F2F2F2;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.upload-documents h2 {
+  color: #3F3F3F;
+  margin-bottom: 20px;
+}
+
+.file-input {
+  margin-bottom: 10px;
+}
+
+.browse-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.browse-button:hover {
+  background-color: #45a049;
+}
+.vertical-list {
+  list-style-type: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+.vertical-list li {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.vertical-list li:hover {
+  background-color: #e0e0e0;
+}
+.wrapper {
+    display: flex;
+  }
+  
+  .vertical-menu {
+    width: 200px;
+    background-color: #f8f9fa;
+  }
+  
+  .vertical-menu ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .vertical-menu li {
+    padding: 10px;
+  }
+  
+  .vertical-menu li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .vertical-menu li a:hover {
+    background-color: #e9ecef;
+  }
+  
+  .dashboard-container {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  .wrapper {
+    display: flex;
+  }
+  
+  .vertical-menu {
+    width: 200px;
+    background-color: #f8f9fa;
+  }
+  
+  .vertical-menu ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .vertical-menu li {
+    padding: 10px;
+  }
+  
+  .vertical-menu li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .vertical-menu li a:hover {
+    background-color: #e9ecef;
+  }
+  
+  .content-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .dashboard-container {
+    padding: 20px;
+  }
+  
+  .upload-documents {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .menu-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .vertical-menu {
+    width: 200px;
+    background-color: #f8f9fa;
+  }
+  
+  .vertical-menu ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .vertical-menu li {
+    padding: 10px;
+  }
+  
+  .vertical-menu li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .vertical-menu li a:hover {
+    background-color: #e9ecef;
+  }
+  
+  .upload-box {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .upload-documents {
+    text-align: center;
+  }
+  
+  .upload-documents h3 {
+    margin-bottom: 10px;
+  }
+    

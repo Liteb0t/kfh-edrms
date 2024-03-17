@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+<header><h1>Kuwait Finance House management</h1></header>
+
+<nav>
+    <a href="{% url 'index' %}">Dashboard</a>
+    <a href="{% url 'employees' %}">Employees</a>
+    <a href="{% url 'documents' %}">Documents</a>
+    <a class="login-button" href="{% url 'login' %}">Login</a>
+</nav>
+
+<div id="content-main">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
