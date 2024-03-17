@@ -7,9 +7,22 @@
 {% block content %}
     <h2>List of employees</h2>
 
-    <ul>
+    Search: <input type="text"><button>Search</button>
+
+    <table class="employee-list">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Branch ID</th>
+            <th>Role ID</th>
+        </tr>
         {% for employee in employees %}
-            <li>{{ employee.first_name }} {{ employee.last_name }}</li>
+            <tr>
+                <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.branch_id }}</td>
+                <td>{{ employee.role_id }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
 {% endblock %}

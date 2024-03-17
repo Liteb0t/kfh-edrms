@@ -5,18 +5,11 @@ from django.template import loader
 from home.models import Employee
 
 
-# Create your views here.
+# Dashboard
 def index(request):
     template = loader.get_template('dashboard.html')
     return HttpResponse(template.render())
 
-def shangoedrms(request):
-    template = loader.get_template('shangoedrms.html')
-    return HttpResponse(template.render())
-
-# def edrms(request):
-#     template = loader.get_template('master.html')
-#     return HttpResponse(template.render())
 
 def Employees(request):
     employees = Employee.objects.all().values()
@@ -34,12 +27,3 @@ def Login(request):
     template = loader.get_template('login.html')
     return HttpResponse(template.render())
 
-
-# to be removed
-def members(request):
-    mymembers = Employee.objects.all().values()
-    template = loader.get_template('all_members.html')
-    context = {
-        'mymembers': mymembers,
-    }
-    return HttpResponse(template.render(context, request))
