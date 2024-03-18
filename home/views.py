@@ -16,6 +16,8 @@ def Employees(request):
     template = loader.get_template('employees.html')
     context = {
         'employees': employees,
+        'range': range(Employee.objects.all().__len__()),
+        'table_row_count': Employee.objects.all().__len__()
     }
     return HttpResponse(template.render(context, request))
 
