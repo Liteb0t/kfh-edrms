@@ -7,14 +7,26 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-<header><h1>Kuwait Finance House management</h1></header>
+<header>
+    <h1>Kuwait Finance House management</h1>
+    <a id="login-button" href="{% url 'login' %}">
+        <img src="{% static 'img/user_icon.svg' %}" alt="profile picture">
+        <span>Click here to login</span>
+    </a>
 
+</header>
+
+<!--<div id="nav-container">-->
 <nav>
     <a href="{% url 'index' %}">Dashboard</a>
     <a href="{% url 'employees' %}">Employees</a>
     <a href="{% url 'documents' %}">Documents</a>
+    <!--
+    <div id="nav-separator"></div>
     <a class="login-button" href="{% url 'login' %}">Login</a>
+    -->
 </nav>
+<!--</div>-->
 
 <div id="content-main">
     {% block content %}
