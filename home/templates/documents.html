@@ -7,9 +7,26 @@
 {% block content %}
     <h2>List of documents</h2>
 
-    <ul>
-        {% for employee in employees %}
-            <li>{{ employee.first_name }} {{ employee.last_name }}</li>
+    Search: <input type="text"><button>Search</button>
+    <br /><br />
+    <table class="employee-list">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Security</th>
+            <th>Upload Date</th>
+            <th>Author</th>
+            <th>Tags</th>
+        </tr>
+        {% for document in documents %}
+            <tr>
+                <td>{{ document.id }}</td>
+                <td>{{ document.title }}</td>
+                <td>{{ document.security_level }}</td>
+                <td>{{ document.uploaded_at }}</td>
+                <td>{{ document }}</td>
+                <td><button>Add tags...</button></td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
 {% endblock %}

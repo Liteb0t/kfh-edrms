@@ -2,7 +2,7 @@
 from django.http import HttpResponse
 from django.template import loader
 
-from home.models import Employee
+from home.models import Employee, Document
 
 
 # Dashboard
@@ -20,8 +20,12 @@ def Employees(request):
     return HttpResponse(template.render(context, request))
 
 def Documents(request):
+    documents = Document.objects.all().values()
     template = loader.get_template('documents.html')
-    return HttpResponse(template.render())
+    context = {
+        'documents': documents,
+    }
+    return HttpResponse(template.render(context, request))
 
 def Login(request):
     template = loader.get_template('login.html')
