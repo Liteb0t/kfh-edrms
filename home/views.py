@@ -17,7 +17,14 @@ def Employees(request):
     context = {
         'employees': employees,
         'range': range(Employee.objects.all().__len__()),
-        'table_row_count': Employee.objects.all().__len__()
+    }
+    return HttpResponse(template.render(context, request))
+
+def EmployeeDetails(request, id):
+    employee = Employee.objects.get(id=id)
+    template = loader.get_template('employee-details.html')
+    context = {
+        'employee': employee
     }
     return HttpResponse(template.render(context, request))
 
@@ -26,8 +33,18 @@ def Documents(request):
     template = loader.get_template('documents.html')
     context = {
         'documents': documents,
+        'range': range(Document.objects.all().__len__()),
     }
     return HttpResponse(template.render(context, request))
+
+def DocumentDetails(request, id):
+    document = Document.objects.get(id=id)
+    template = loader.get_template('document-details.html')
+    context = {
+        'document': document
+    }
+    return HttpResponse(template.render(context, request))
+
 
 def Login(request):
     template = loader.get_template('login.html')

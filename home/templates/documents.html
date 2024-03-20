@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load maps_tags %}
 
 {% block title %}
     KFH - Documents
@@ -7,9 +8,10 @@
 {% block content %}
     <h2>List of documents</h2>
 
-    Search: <input type="text"><button>Search</button>
+    <label for="search">Search: </label>
+    <input type="text" id="search"><button>Search</button>
     <br /><br />
-    <table class="employee-list">
+    <table id="document-table">
         <tr>
             <th>ID</th>
             <th>Title</th>
@@ -18,15 +20,28 @@
             <th>Author</th>
             <th>Tags</th>
         </tr>
-        {% for document in documents %}
-            <tr>
+        {% for i in range %}
+            {% with documents|list_item:i as document %}
+            <tr id="{{ document.id }}" class="clickable">
                 <td>{{ document.id }}</td>
                 <td>{{ document.title }}</td>
                 <td>{{ document.security_level }}</td>
                 <td>{{ document.uploaded_at }}</td>
-                <td>{{ document }}</td>
+                <td>{{ document.uploaded_by.first_name }}</td>
                 <td><button>Add tags...</button></td>
             </tr>
+            {% endwith %}
         {% endfor %}
     </table>
+    <script>
+    // Make table rows clickable
+    var table = document.getElementById("document-table");
+    for (var i = 0, row; i < table.rows.length; i++) {
+        const row_id = table.rows[i].id;
+        table.rows[i].addEventListener("click", () => {
+            // When a table row is clicked, go to details page with that employee ID
+            window.location.href = `details/${row_id}`;
+        })
+    }
+    </script>
 {% endblock %}

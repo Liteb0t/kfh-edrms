@@ -1,0 +1,19 @@
+{% extends "master.html" %}
+
+{% block title %}
+    {{ document.id }} - {{ document.title }}
+{% endblock %}
+
+{% block content %}
+    <h2>
+        {{ document.title }}
+    </h2>
+    <p>
+        Uploaded at: {{ document.uploaded_at }}<br>
+        Author: <a href="/employees/details/{{ document.uploaded_by.id }}">
+        {{ document.uploaded_by.first_name }}
+        {{ document.uploaded_by.last_name }} </a><br>
+        ID: {{ document.id }}<br>
+        (ADD LINK TO PDF FILE OR WHATEVER)
+    </p>
+{% endblock %}

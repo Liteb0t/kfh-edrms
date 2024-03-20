@@ -8,7 +8,8 @@
 {% block content %}
     <h2>List of employees</h2>
 
-    <label for="search">Search: </label><input type="text" id="search"><button>Search</button>
+    <label for="search">Search: </label><
+    input type="text" id="search"><button>Search</button>
     <br /><br />
     <table id="employee-table">
         <tr>
@@ -20,7 +21,7 @@
         </tr>
         {% for i in range %}
             {% with employees|list_item:i as employee %}
-            <tr id="employee-{{ employee.id }}" class="clickable">
+            <tr id="{{ employee.id }}" class="clickable">
                 <td>{{ employee.id }}</td>
                 <td>{{ employee.first_name }}</td>
                 <td>{{ employee.last_name }}</td>
@@ -31,11 +32,13 @@
         {% endfor %}
     </table>
     <script>
+    // Make table rows clickable
     var table = document.getElementById("employee-table");
     for (var i = 0, row; i < table.rows.length; i++) {
         const row_id = table.rows[i].id;
         table.rows[i].addEventListener("click", () => {
-            window.location.href = `/${row_id}`;
+            // When a table row is clicked, go to details page with that employee ID
+            window.location.href = `details/${row_id}`;
         })
     }
     </script>

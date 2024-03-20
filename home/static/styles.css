@@ -8,7 +8,7 @@ html {
 body {
     display: grid;
     grid-template-rows: 62px auto;
-    grid-template-columns: 226px auto;
+    grid-template-columns: 200px auto;
     border-left: 2px solid #000;
     border-right: 2px solid #000;
     background-color: white;
@@ -128,7 +128,14 @@ tr:nth-child(even) {background-color: #EEE}
     cursor: pointer;
 }
 
-/* Responsive to narrow windows */
+/* Responsive to narrow windows & mobile devices */
+
+@media all and (max-width: 920px) {
+    header h1 {
+        font-size: 1.5em;
+        padding-top: 15px;
+    }
+}
 
 @media all and (max-width: 800px) {
     body {
@@ -148,5 +155,6 @@ tr:nth-child(even) {background-color: #EEE}
     header h1 {
         white-space: normal;
         width: 200px;
+        padding-top: 10px;
     }
 }
