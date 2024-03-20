@@ -128,7 +128,14 @@ tr:nth-child(even) {background-color: #EEE}
     cursor: pointer;
 }
 
-/* Responsive to narrow windows */
+/* Responsive to narrow windows & mobile devices */
+
+@media all and (max-width: 920px) {
+    header h1 {
+        font-size: 1.5em;
+        padding-top: 15px;
+    }
+}
 
 @media all and (max-width: 800px) {
     body {
@@ -148,5 +155,6 @@ tr:nth-child(even) {background-color: #EEE}
     header h1 {
         white-space: normal;
         width: 200px;
+        padding-top: 10px;
     }
 }

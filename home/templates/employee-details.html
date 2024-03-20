@@ -1,0 +1,25 @@
+{% extends "master.html" %}
+
+{% block title %}
+    Details of {{ employee.first_name }} {{ employee.id }}
+{% endblock %}
+
+{% block content %}
+    <h2>
+        {{ employee.first_name }}
+        {% if employee.middle_name != null %}
+            {{ employee.middle_name }}
+        {% endif %}
+        {% if employee.last_name != null %}
+            {{ employee.last_name }}
+        {% endif %}
+    </h2>
+    <p>
+        Email: {{ employee.email }}<br>
+        Phone: {{ employee.phone }}<br>
+        ID: {{ employee.id }}<br>
+        Branch: <a href="TBA">{{ employee.branch.name }}</a><br>
+        Role: {{ employee.role.name }}
+
+    </p>
+{% endblock %}
