@@ -28,6 +28,14 @@ def EmployeeDetails(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+def EmployeeDetails(request, id):
+    employee = Employee.objects.get(id=id)
+    template = loader.get_template('employee-details.html')
+    context = {
+        'employee': employee
+    }
+    return HttpResponse(template.render(context, request))
+
 def Documents(request):
     documents = Document.objects.all().values()
     template = loader.get_template('documents.html')
