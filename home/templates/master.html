@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
 </head>
 <body>
 <header>
@@ -16,17 +17,11 @@
 
 </header>
 
-<!--<div id="nav-container">-->
 <nav>
     <a href="{% url 'index' %}">Dashboard</a>
     <a href="{% url 'employees' %}">Employees</a>
     <a href="{% url 'documents' %}">Documents</a>
-    <!--
-    <div id="nav-separator"></div>
-    <a class="login-button" href="{% url 'login' %}">Login</a>
-    -->
 </nav>
-<!--</div>-->
 
 <div id="content-main">
     {% block content %}

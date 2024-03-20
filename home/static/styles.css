@@ -143,3 +143,10 @@ tr:nth-child(even) {background-color: #EEE}
         font-size: 1em;
     }
 }
+
+@media all and (max-width: 600px) {
+    header h1 {
+        white-space: normal;
+        width: 200px;
+    }
+}
