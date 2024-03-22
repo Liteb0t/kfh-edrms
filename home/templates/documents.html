@@ -20,7 +20,7 @@
             <th>Author</th>
             <th>Tags</th>
         </tr>
-        {% for i in range %}
+        {% for i in range %} <!-- python for loop, range is how many documents to display  -->
             {% with documents|list_item:i as document %}
             <tr id="{{ document.id }}" class="clickable">
                 <td>{{ document.id }}</td>
@@ -36,7 +36,7 @@
     <script>
     // Make table rows clickable
     var table = document.getElementById("document-table");
-    for (var i = 0, row; i < table.rows.length; i++) {
+    for (var i = 0, row; i < table.rows.length; i++) {  <!-- range is table.rows.length -->
         const row_id = table.rows[i].id;
         table.rows[i].addEventListener("click", () => {
             // When a table row is clicked, go to details page with that employee ID
