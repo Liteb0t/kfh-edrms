@@ -48,7 +48,7 @@ def DocumentDetails(request, id):
     return HttpResponse(template.render(context, request))
 
 
-def Login(request):
-    template = loader.get_template('login.html')
-    return HttpResponse(template.render())
+# def Login(request):
+#     template = loader.get_template('login.html')
+#     return HttpResponse(template.render())
 
