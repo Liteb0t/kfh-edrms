@@ -6,8 +6,9 @@ body {
   background-color: #9d9;
   border: 3px solid #042;
   /*! display: block; */
+  min-width: 20em;
   max-width: 30em;
-  margin: 10% auto 0 auto;
+  margin: 10vh auto auto auto;
   height: 20em;
-  padding: 10px;
+  padding: 1em;
 }
