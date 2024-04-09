@@ -1,0 +1,13 @@
+html {
+  background: white;
+}
+
+body {
+  background-color: #9d9;
+  border: 3px solid #042;
+  /*! display: block; */
+  max-width: 30em;
+  margin: 10% auto 0 auto;
+  height: 20em;
+  padding: 10px;
+}

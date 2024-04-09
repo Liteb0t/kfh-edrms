@@ -1,17 +1,23 @@
 # from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.auth.decorators import login_required
 
 from home.models import Employee, Document
 
 
-# Dashboard
+
+@login_required
 def index(request):
     template = loader.get_template('dashboard.html')
-    return HttpResponse(template.render())
 
+    # we still pass 'request' which contains the logged-in user
+    # without it, the "logged in as [...]" would not work
+    return HttpResponse(template.render({}, request))
 
+@login_required
 def Employees(request):
+    # if request.user.is_authenticated:
     employees = Employee.objects.all().values()
     template = loader.get_template('employees.html')
     context = {
@@ -19,7 +25,10 @@ def Employees(request):
         'range': range(Employee.objects.all().__len__()),
     }
     return HttpResponse(template.render(context, request))
+    # else:
+    #     return HttpResponse("Permission denied.", status=403)
 
+@login_required
 def EmployeeDetails(request, id):
     employee = Employee.objects.get(id=id)
     template = loader.get_template('employee-details.html')
@@ -29,6 +38,7 @@ def EmployeeDetails(request, id):
     return HttpResponse(template.render(context, request))
 
 
+@login_required
 def Documents(request):
     documents = Document.objects.all().values()
     template = loader.get_template('documents.html')
@@ -39,6 +49,7 @@ def Documents(request):
     return HttpResponse(template.render(context, request))
 
 
+@login_required
 def DocumentDetails(request, id):
     document = Document.objects.get(id=id)
     template = loader.get_template('document-details.html')

@@ -10,10 +10,18 @@
 <body>
 <header>
     <h1>Kuwait Finance House management</h1>
-    <a id="login-button" href="{% url 'login' %}">
-        <img src="{% static 'img/user_icon.svg' %}" alt="profile picture">
-        <span>Click here to login</span>
-    </a>
+    {% if not request.user.is_authenticated %}
+        <a id="login-button" href="{% url 'login' %}">
+            <img src="{% static 'img/user_icon.svg' %}" alt="profile picture">
+            <span>Click here to login</span>
+        </a>
+    {% else %}
+        <a id="login-button" href="{% url 'logout' %}">
+            <img src="{% static 'img/user_icon.svg' %}" alt="profile picture">
+            <span>Logged in as {{ request.user.username }}<br>
+            Click to logout</span>
+        </a>
+    {% endif %}
 
 </header>
 

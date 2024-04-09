@@ -1,0 +1,10 @@
+{% extends "registration/master.html" %}
+
+{% block title %}
+    KFH - Login
+{% endblock %}
+
+{% block content %}
+    Logged out successfully.<br>
+    <a href="{% url 'login' %}">Log in again</a>
+{% endblock %}
