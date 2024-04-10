@@ -81,3 +81,11 @@ def Profile(request):
     }
     template = loader.get_template('profile.html')
     return HttpResponse(template.render(context,request))
+
+@login_required
+def Correspondants(request):
+    template = loader.get_template('correspondants.html')
+
+    # we still pass 'request' which contains the logged-in user
+    # without it, the "logged in as [...]" would not work
+    return HttpResponse(template.render({}, request))
