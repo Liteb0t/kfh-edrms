@@ -1,4 +1,4 @@
-{% extends "master.html" %}
+{% extends "registration/master.html" %}
 
 {% block title %}
     KFH - Login
@@ -19,7 +19,9 @@
     {% endif %}
   {% endif %}
 
-  <form method="post" action="{% url 'login' %}">
+  username: admin and password: password (for testing)
+
+    <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <table>
       <tr>
