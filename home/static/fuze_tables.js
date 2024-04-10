@@ -518,17 +518,3 @@ class FuzeTable {
 		// return value - included_data_index;
 	}
 } 
-
-
-class Planet {
-    constructor(name, {
-        mass = 100000
-        ,surface_temperature = 0.0
-        ,has_water = false
-    } = {}) {
-        this.name = name;
-        this.mass = mass;
-        this.surface_temperature = surface_temperature;
-        this.has_water = has_water;
-    }
-}
