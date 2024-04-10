@@ -5,6 +5,7 @@ from django.template import loader
 from django.contrib.auth.decorators import login_required
 
 from home.models import Employee, Document
+from home.models import Pending
 
 
 
@@ -39,6 +40,14 @@ def EmployeeDetails(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+def Pendings(request):
+    pendings = Pending.objects.all().values()
+    template = loader.get_template('dashboard.html')
+    context = {
+        'pendings': pendings,
+        'range': range(Pending.objects.all().__len__()),
+    }
+    return HttpResponse(template.render(context,request))
 
 @login_required
 def Documents(request):
@@ -65,3 +74,10 @@ def DocumentDetails(request, id):
 #     template = loader.get_template('login.html')
 #     return HttpResponse(template.render())
 
+def Profile(request):
+    employee = Employee.objects.get()
+    context ={
+        'employee': employee
+    }
+    template = loader.get_template('profile.html')
+    return HttpResponse(template.render(context,request))

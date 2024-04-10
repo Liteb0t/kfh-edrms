@@ -1,13 +1,50 @@
 {% extends "master.html" %}
+{% load maps_tags %}
 
 {% block title %}
     KFH - Dashboard
 {% endblock %}
 
 {% block content %}
-    <h2>Dashboard</h2>
+    <h2>DASHBOARD</h2>
 
     <p>
-        Some content here...
+       Welcome to Kuwait Finance House dashboard :)
     </p>
+    <h3>Pending documents</h3>
+
+    <label for="search">Search: </label>
+    <input type="text" id="search"><button>Search</button>
+    <br /><br />
+    <table id="pendingdocument-table">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Request</th>
+            <th>Owner</th>
+            <th>Due Date</th>
+        </tr>
+        {% for i in range %}
+            {% with pendings|list_item:i as pending %}
+            <tr id="{{ pending.id}}" class="clickable">
+                <td>{{ pending.id }}</td>
+                <td>{{ pending.name }}</td>
+                <td>{{ pending.request }}</td>
+                <td>{{ pending.owner }}</td>
+                <td>{{ pending.due_at }}</td>
+            </tr>
+            {% endwith %}
+        {% endfor %}
+    </table>
+    <script>
+    // Make table rows clickable
+    var table = document.getElementById("pendingdocument-table");
+    for (var i = 0, row; i < table.rows.length; i++) {
+        const row_id = table.rows[i].id;
+        table.rows[i].addEventListener("click", () => {
+            // When a table row is clicked, go to details page with that employee ID
+            window.location.href = `detials/${row_id}`;
+        })
+    }
+    </script>
 {% endblock %}
