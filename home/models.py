@@ -42,3 +42,10 @@ class DocumentAccessRequest(models.Model):
     document = models.ForeignKey("Document", on_delete=models.CASCADE)  # When document is deleted request is deleted
     employee = models.ForeignKey("Employee", on_delete=models.CASCADE)  # When employee is deleted request is deleted
     supervisor = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="supervisor")
+
+class Pending(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    request = models.CharField(max_length=100)
+    owner = models.CharField(max_length=100)
+    due_at = models.DateTimeField(auto_now_add=True)
