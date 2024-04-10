@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from home.models import Employee, Document
 from home.models import Pending
-
+import json
 
 
 @login_required
@@ -23,8 +23,7 @@ def Employees(request):
     employees = Employee.objects.all().values()
     template = loader.get_template('employees.html')
     context = {
-        'employees': employees,
-        'employeesAsJson': serializers.serialize('json', Employee.objects.all()),
+        'employeesAsJson': json.dumps(list(employees)),
         'range': range(Employee.objects.all().__len__()),
     }
     return HttpResponse(template.render(context, request))
@@ -40,11 +39,13 @@ def EmployeeDetails(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required
 def Pendings(request):
     pendings = Pending.objects.all().values()
     template = loader.get_template('dashboard.html')
     context = {
         'pendings': pendings,
+        'pendingsAsJson': json.dumps(list(pendings), default=str),
         'range': range(Pending.objects.all().__len__()),
     }
     return HttpResponse(template.render(context,request))
@@ -55,6 +56,7 @@ def Documents(request):
     template = loader.get_template('documents.html')
     context = {
         'documents': documents,
+        'documentsAsJson': json.dumps(list(documents), default=str),
         'range': range(Document.objects.all().__len__()),
     }
     return HttpResponse(template.render(context, request))

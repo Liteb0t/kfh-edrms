@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 {% load maps_tags %}
 
 {% block title %}
@@ -36,8 +37,13 @@
             {% endwith %}
         {% endfor %}
     </table>
+    <table class="fuze-table" id="pending-table"></table>
+    {{ pendingsAsJson|json_script:"mydata" }}
+    <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
+    const jsonData = JSON.parse(document.getElementById("mydata").textContent);
     // Make table rows clickable
+    /*
     var table = document.getElementById("pendingdocument-table");
     for (var i = 0, row; i < table.rows.length; i++) {
         const row_id = table.rows[i].id;
@@ -46,5 +52,11 @@
             window.location.href = `detials/${row_id}`;
         })
     }
+     */
+    pending_table = new FuzeTable("pending-table",
+        {
+            title: "documents"
+            ,json_data: JSON.parse(jsonData)
+        });
     </script>
 {% endblock %}

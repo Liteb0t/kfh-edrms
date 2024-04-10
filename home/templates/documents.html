@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 {% load maps_tags %}
 
 {% block title %}
@@ -25,37 +26,15 @@
     <label for="search">Search: </label>
     <input type="text" id="search"><button>Search</button>
     <br /><br />
-    <table id="document-table">
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Security</th>
-            <th>Upload Date</th>
-            <th>Author</th>
-            <th>Tags</th>
-        </tr>
-        {% for i in range %} <!-- python for loop, range is how many documents to display  -->
-            {% with documents|list_item:i as document %}
-            <tr id="{{ document.id }}" class="clickable">
-                <td>{{ document.id }}</td>
-                <td>{{ document.title }}</td>
-                <td>{{ document.security_level }}</td>
-                <td>{{ document.uploaded_at }}</td>
-                <td>{{ document.uploaded_by.first_name }}</td>
-                <td><button>Add tags...</button></td>
-            </tr>
-            {% endwith %}
-        {% endfor %}
-    </table>
+    <table class="fuze-table" id="document-table"></table>
+    {{ documentsAsJson|json_script:"mydata" }}
+    <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
-    // Make table rows clickable
-    var table = document.getElementById("document-table");
-    for (var i = 0, row; i < table.rows.length; i++) {  <!-- range is table.rows.length -->
-        const row_id = table.rows[i].id;
-        table.rows[i].addEventListener("click", () => {
-            // When a table row is clicked, go to details page with that employee ID
-            window.location.href = `details/${row_id}`;
-        })
-    }
+    const jsonData = JSON.parse(document.getElementById("mydata").textContent);
+    documents_table = new FuzeTable("document-table",
+        {
+            title: "documents"
+            ,json_data: JSON.parse(jsonData)
+        });
     </script>
 {% endblock %}

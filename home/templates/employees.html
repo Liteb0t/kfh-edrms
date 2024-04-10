@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 {% load maps_tags %}
 
 {% block title %}
@@ -7,39 +8,15 @@
 
 {% block content %}
     <h2>List of employees</h2>
-
-    <label for="search">Search: </label>
-    <input type="text" id="search"><button>Search</button>
-    <br /><br />
-    <table id="employee-table">
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Branch ID</th>
-            <th>Role ID</th>
-        </tr>
-        {% for i in range %}
-            {% with employees|list_item:i as employee %}
-            <tr id="{{ employee.id }}" class="clickable">
-                <td>{{ employee.id }}</td>
-                <td>{{ employee.first_name }}</td>
-                <td>{{ employee.last_name }}</td>
-                <td>{{ employee.email }}</td>
-                <td>{{ employee.branch_id }}</td>
-            </tr>
-            {% endwith %}
-        {% endfor %}
-    </table>
+    <table class="fuze-table" id="employees-table"></table>
+    {{ employeesAsJson|json_script:"mydata" }}
+    <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
-    // Make table rows clickable
-    var table = document.getElementById("employee-table");
-    for (var i = 0, row; i < table.rows.length; i++) {
-        const row_id = table.rows[i].id;
-        table.rows[i].addEventListener("click", () => {
-            // When a table row is clicked, go to details page with that employee ID
-            window.location.href = `details/${row_id}`;
-        })
-    }
+    const jsonData = JSON.parse(document.getElementById("mydata").textContent);
+    employees_table = new FuzeTable("employees-table",
+        {
+            title: "Employees"
+            ,json_data: JSON.parse(jsonData)
+        });
     </script>
 {% endblock %}
