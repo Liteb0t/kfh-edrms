@@ -14,7 +14,7 @@
         {{ document.uploaded_by.first_name }}
         {{ document.uploaded_by.last_name }} </a><br>
         ID: {{ document.id }}<br>
-        Link: <a href="/static/documents/{{ document.file_name }}">
-        {{ document.file_name }}</a>
+        Link: <a href="/media/{{ document.file }}">
+        {{ document.file }}</a>
     </p>
 {% endblock %}

@@ -29,11 +29,12 @@ class Branch(models.Model):
 class Document(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    security_level = models.CharField(max_length=50)
+    # security_level = models.CharField(max_length=50)
+    file = models.FileField(default="yes.png")
     uploaded_at = models.DateTimeField(auto_now_add=True)
     # when Employee is deleted, uploaded_by becomes blank but Document remains
     uploaded_by = models.ForeignKey("Employee", on_delete=models.SET_NULL, null=True)
-    file_name = models.CharField(max_length=50, default="Sample_Bank_Document.pdf")
+    # file_name = models.CharField(max_length=50, default="Sample_Bank_Document.pdf")
 
 class DocumentAccessRequest(models.Model):
     id = models.AutoField(primary_key=True)
