@@ -1,18 +1,24 @@
 import uuid
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class Employee(models.Model):
-    id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, null=True)
-    last_name = models.CharField(max_length=50, null=True)
-    email = models.CharField(max_length=50)
-    password = models.CharField(max_length=50, blank=True, null=True)
+# class CustomUser(AbstractUser):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+#
+#     def __str__(self):
+#         return self.username
+#
+
+class Employee(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+
+    # Name, email, and password are included already with AbstractUser
     phone = models.CharField(max_length=16, null=True)
+
     # PROTECT: Employees must be reassigned before branch/role can be deleted
-    branch = models.ForeignKey("Branch", on_delete=models.PROTECT)
-    role = models.ForeignKey("Role", on_delete=models.PROTECT)
+    branch = models.ForeignKey("Branch", on_delete=models.PROTECT, default=None, null=True)
+    role = models.ForeignKey("Role", on_delete=models.PROTECT, default=None, null=True)
 
 
 class Role(models.Model):
