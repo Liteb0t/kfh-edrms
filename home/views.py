@@ -18,9 +18,9 @@ def index(request):
 
 @login_required
 def Employees(request):
-    employees = Employee.objects.all().values()
+    employees = Employee.objects.all().values('email', 'first_name', 'last_name', 'phone')
     context = {
-        'employeesAsJson': json.dumps(list(employees)),
+        'employeesAsJson': json.dumps(list(employees), default=str),
         'range': range(Employee.objects.all().__len__()),
     }
     return render(request,'employees.html', context)
