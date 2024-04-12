@@ -1,14 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import audit
 
-# class CustomUser(AbstractUser):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-#
-#     def __str__(self):
-#         return self.username
-#
 
 class Employee(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
@@ -41,10 +34,8 @@ class Document(models.Model):
     # when Employee is deleted, uploaded_by becomes blank but Document remains
     uploaded_by = models.ForeignKey("Employee", on_delete=models.SET_NULL, null=True)
     # file_name = models.CharField(max_length=50, default="Sample_Bank_Document.pdf")
-    history = audit.AuditTrail()
 
-    def __str__(self):
-        return "%s %s" % (self.title)
+
 class DocumentAccessRequest(models.Model):
     id = models.AutoField(primary_key=True)
     reason_given = models.CharField(max_length=500, null=True)
