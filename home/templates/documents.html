@@ -12,34 +12,69 @@
     add logic to each filter to ensure it works
     add docked to the right the option to switch view
     work on permission system to allow users to ask to see certain documents
-    <h6> Filters </h6>
-    <input type="text" id="word"><button>Correspondents</button></input>
-    <input type="text" id="word"><button>Tag</button></input>
-    <input type="text" id="word"><button>Document Type</button></input>
-    <input type="text" id="word"><button>Storage</button></input>
-    <input type="text" id="word"><button>Added</button></input>
-    <input type="text" id="word"><button>Permissions</button></input>
-    <input type="text" id="word"><button>Correspondents</button></input>
 
      -->
-    <label for="search">Search: </label>
+    <div class="sidebar">
+    <img src="{% static 'img/listview2.png' %}" alt="List View" id="listViewIcon" class="view-icon active">
+    <img src="{% static 'img/gridview.jpeg' %}" alt="Grid View" id="gridViewIcon" class="view-icon">
+</div>
+
+<div class="content">
+    {% if view_mode == 'list' %}
+        <!-- List View -->
+        <!-- incl table code but doesn't work, executes as a list of record names  -->
+    {% else %}
+        <!-- Grid View -->
+        <div class="grid-container">
+            {% for document in documents %}
+                <div class="grid-item">{{ document.title }}</div>
+                <img src="{{ document.image_url }}" alt="{{ document.title }}">
+                <!-- Add more details as needed -->
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+     <label for="search">Search: </label>
     <input type="text" id="search"><button>Search</button>
     <br /><br />
     <table class="fuze-table" id="document-table"></table>
     {{ documentsAsJson|json_script:"mydata" }}
     <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
-    const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
-    documents_table = new FuzeTable("document-table",
-        {
-            title: "documents"
-            ,json_data: jsonData
-            ,clickable_rows: true
-            ,on_row_click: onRowClick
-        });
+        const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
+        documents_table = new FuzeTable("document-table",
+            {
+                title: "documents"
+                ,json_data: jsonData
+                ,clickable_rows: true
+                ,on_row_click: onRowClick
+            });
 
-    function onRowClick(data_entry) {
-        window.location.pathname = `/documents/details/${jsonData[data_entry].id}`;
-    }
+        function onRowClick(data_entry) {
+            window.location.pathname = `/documents/details/${jsonData[data_entry].id}`;
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Ensure the page starts in list mode by default
+            $('#listViewIcon').addClass('active');
+
+            // Handle click event on the list view icon
+            $('#listViewIcon').click(function() {
+                $(this).addClass('active');
+                $('#gridViewIcon').removeClass('active');
+                $('.content').removeClass('grid-mode');
+            });
+
+            // Handle click event on the grid view icon
+            $('#gridViewIcon').click(function() {
+                $(this).addClass('active');
+                $('#listViewIcon').removeClass('active');
+                $('.content').addClass('grid-mode');
+            });
+        });
     </script>
 {% endblock %}

@@ -101,7 +101,7 @@ nav .login-button {
     grid-row: 2;
     grid-column: 2;
     padding: 10px;
-    float:left;
+    float: left;
     background-color: white;
 }
 
@@ -129,90 +129,90 @@ tr:nth-child(even) {background-color: #EEE}
 }
 */
 .fuze-table {
-	border: 2px solid #000;
-	box-sizing: border-box;
-	/* height: 100%; */
-	/* overflow-y: scroll; */
+    border: 2px solid #000;
+    box-sizing: border-box;
+    /* height: 100%; */
+    /* overflow-y: scroll; */
 }
 
 .fuze-table .table-title-and-navigation-container {
-	background-color: #cdf;
-	display: flex;
-	padding: 2px;
-	border-bottom: 2px solid #246;
-	position: sticky;
-	top: 0;
-	z-index: 99;
+    background-color: #cdf;
+    display: flex;
+    padding: 2px;
+    border-bottom: 2px solid #246;
+    position: sticky;
+    top: 0;
+    z-index: 99;
 }
 
 .fuze-table .table-title {
-	flex: 1 0 auto;
+    flex: 1 0 auto;
 }
 
 .fuze-table .showing-indexes {
-	/* blah */
+    /* blah */
 }
 
 .fuze-table .page-button:hover {
-	background-color: #ec9;
+    background-color: #ec9;
 }
 
 .fuze-table .table-container {
-	/*! overflow-x: auto; */
-	/*! max-height: 350px; */
-	padding: 0 2px 0 2px;
-	/*! overflow-y: clip; */
-	/*! max-height: 95%; */
+    /*! overflow-x: auto; */
+    /*! max-height: 350px; */
+    padding: 0 2px 0 2px;
+    /*! overflow-y: clip; */
+    /*! max-height: 95%; */
 }
 
 .fuze-table table {
-	border-collapse: collapse;
-	/*! position: relative; */
-	text-align: left;
+    border-collapse: collapse;
+    /*! position: relative; */
+    text-align: left;
 }
 
 .fuze-table .column-buttons {
-	float: right;
-	/*! width: 1em; */
-	text-align: center;
-	/*! cursor: pointer; */
-	/*! bottom: 0; */
-	/*! display: block; */
-	/*! position: absolute; */
-	/*! width: -moz-available; */
-	right: 0;
-	top: 0;
+    float: right;
+    /*! width: 1em; */
+    text-align: center;
+    /*! cursor: pointer; */
+    /*! bottom: 0; */
+    /*! display: block; */
+    /*! position: absolute; */
+    /*! width: -moz-available; */
+    right: 0;
+    top: 0;
 }
 
 .fuze-table .column-buttons span {
-	cursor: pointer;
-	display: inline-block;
-	width: 1.5em;
+    cursor: pointer;
+    display: inline-block;
+    width: 1.5em;
 }
 
 .fuze-table .column-buttons span:hover {
-	background-color: #cdf;
+    background-color: #cdf;
 }
 
 .fuze-table table td {
-	border: 2px solid #cde;
-	padding: 4px 8px 4px 8px;
+    border: 2px solid #cde;
+    padding: 4px 8px 4px 8px;
 }
 
 .fuze-table thead th {
-	background: #f2f9ff;
-	position: sticky;
-	top: 29px;
-	padding: 4px;
-	border-bottom: 2px solid blue;
+    background: #f2f9ff;
+    position: sticky;
+    top: 29px;
+    padding: 4px;
+    border-bottom: 2px solid blue;
 }
 
 .fuze-table tbody tr:nth-child(odd) {
-	background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 
 .fuze-table tbody tr:hover {
-	background-color: #dde;
+    background-color: #dde;
     cursor: pointer;
 }
 
@@ -245,4 +245,41 @@ tr:nth-child(even) {background-color: #EEE}
         width: 200px;
         padding-top: 10px;
     }
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar {
+    display: flex;
+    align-items: center;
+}
+
+#listViewIcon, #gridViewIcon {
+    width: 50px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#listViewIcon.active, #gridViewIcon.active {
+    border: 3px solid black;
+}
+
+.content {
+    margin-left: 100px; /* Adjust according to sidebar width */
+}
+
+.grid-mode .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+}
+
+.grid-mode .grid-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
 }
