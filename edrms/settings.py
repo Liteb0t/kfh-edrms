@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'audit_trail',
+    # 'audit_trail',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'audit_trail.middleware.AuditMiddleware',
+    # 'audit_trail.middleware.AuditMiddleware',
 ]
 
 ROOT_URLCONF = 'edrms.urls'
@@ -77,10 +77,16 @@ WSGI_APPLICATION = 'edrms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# to connect via command line, open terminal and type
+# psql -h 206.189.115.127 -p 5432 -d kfh_database -U myuser
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'kfh_database',
+        'USER': 'myuser',
+        'PASSWORD': 'weakpassword',
+        'HOST': '206.189.115.127',
+        'PORT': '5432',
     }
 }
 
