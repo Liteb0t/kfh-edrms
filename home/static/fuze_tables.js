@@ -1,4 +1,4 @@
-// Fuze Tables 1.0 - Library to display JSON data in a table
+// Fuze Tables 1.0.1 - Library to display JSON data in a table
 // Developed by https://fuze.page/
 // License: MIT
 
@@ -52,6 +52,7 @@ class FuzeTable {
 		}
 		else {
 			console.log("No JSON provided!");
+			this.table_tbody_element.innerHTML = "No data found."
 			// To do later: show error in the table and still load title bar
 		}
 		// To do later: ensure there is no clash in URL page navigation names
