@@ -6,15 +6,16 @@
 
 {% block content %}
     <h2>
-        {{ employee.first_name }}
+        {{ employee.username }}
+    </h2>
+    <p>
+        Name: {{ employee.first_name }}
         {% if employee.middle_name != null %}
             {{ employee.middle_name }}
         {% endif %}
         {% if employee.last_name != null %}
             {{ employee.last_name }}
-        {% endif %}
-    </h2>
-    <p>
+        {% endif %}<br>
         Email: {{ employee.email }}<br>
         Phone: {{ employee.phone }}<br>
         ID: {{ employee.id }}<br>
