@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'edrms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# to connect via command line, open terminal and type
+# to connect via command line, open terminal and type:
 # psql -h 206.189.115.127 -p 5432 -d kfh_database -U myuser
 DATABASES = {
     'default': {
