@@ -7,7 +7,7 @@ urlpatterns = [
     path("employees/", views.Employees, name="employees"),
     path("employees/details/<int:id>", views.EmployeeDetails, name="employee_details"),
     path("documents/", views.Documents, name="documents"),
-    path("documents/details/<int:id>", views.DocumentDetails, name="document_details"),
+    path("documents/details/<str:file>", views.DocumentDetails, name="document_details"),
     # path("login/", views.Login, name="login"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("correspondents/", views.Correspondents, name="correspondents"),

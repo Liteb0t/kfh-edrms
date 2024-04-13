@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.core import serializers
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
-from django.template import loader
+# from django.core import serializers
+# from django.core.files.storage import FileSystemStorage
+# from django.http import HttpResponse
+# from django.template import loader
 from django.contrib.auth.decorators import login_required
 
 from home.forms import DocumentForm
@@ -55,26 +55,13 @@ def Documents(request):
 
 
 @login_required
-def DocumentDetails(request, id):
-    document = Document.objects.get(id=id)
-    template = loader.get_template('document-details.html')
+def DocumentDetails(request, file):
+    document = Document.objects.get(file=file)
     context = {
         'document': document
     }
     return render(request, 'document-details.html', context)
 
-
-# def Login(request):
-#     template = loader.get_template('login.html')
-#     return HttpResponse(template.render())
-
-# def Profile(request):
-#     employee = Employee.objects.get()
-#     context ={
-#         'employee': employee
-#     }
-#     template = loader.get_template('profile.html')
-#     return HttpResponse(template.render(context, request))
 
 @login_required
 def Correspondents(request):
