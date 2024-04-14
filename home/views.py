@@ -18,15 +18,15 @@ import os
 
 @login_required
 def index(request):
-    documents = Document.objects.all().values()
+    #documents = Document.objects.all().values()
     # Filter records where the datetime field falls within a specific range
-    start_date = timezone.now() - timezone.timedelta(days=1)
+    start_date = timezone.now() - timezone.timedelta(days=31)
     end_date = timezone.now()
-    queryset = Document.objects.filter(uploaded_at__range=(start_date, end_date))
+    queryset = Document.objects.filter(uploaded_at__range=(start_date, end_date)).values()
 
     context = {
         'documents': queryset,
-        'documentsAsJson': json.dumps(list(documents), default=str),
+        'documentsAsJson': json.dumps(list(queryset), default=str),
         'range': range(Document.objects.all().__len__()),
     }
     return render(request, 'dashboard.html', context)
