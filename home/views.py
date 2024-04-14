@@ -120,3 +120,8 @@ def ViewProtectedFile(request, path):
         response = HttpResponse(file.read(), content_type='application/octet-stream')
 
     return response
+
+def delete_document(request, document_id):
+    document = Document.objects.get(id=document_id)
+    document.delete()
+    return render(request, 'delete_document.html', {'document': document})

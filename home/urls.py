@@ -12,5 +12,7 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     # path("correspondents/", views.Correspondents, name="correspondents"),
     path("upload/", views.Upload, name="upload"),
-    path("media/<str:path>", views.ViewProtectedFile, name="protected_media")
+    path("media/<str:path>", views.ViewProtectedFile, name="protected_media"),
+    path('documents/<int:document_id>/delete/', views.delete_document, name='delete_document'),
+    # Other URL patterns
 ]
