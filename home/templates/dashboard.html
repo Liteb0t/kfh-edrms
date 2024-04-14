@@ -13,11 +13,14 @@
     </p>
     <h3>List of Recent Documents</h3>
 
+{#    <table class="fuze-table" id="requesting-table"></table>#}
+
     <table class="fuze-table" id="document-table"></table>
 
  <!--Receive JSON data from view, to pass into the
     json_data parameter of the fuze table-->
     {{ documentsAsJson|json_script:"mydata" }}
+{#    {{ testdataAsJson|json_script:"mydata" }}#}
     <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
     const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
@@ -28,7 +31,13 @@
             ,clickable_rows: true
             ,on_row_click: onRowClick
         });
-
+     {#requesting_table = new FuzeTable("requesting-table",#}
+     {#   {#}
+     {#       title: "Sent Requests"#}
+     {#       ,json_data: jsonData#}
+     {#       ,clickable_rows: true#}
+     {#       ,on_row_click: onRowClick#}
+     {#   });#}
     function onRowClick(data_entry) {
         window.location.pathname = `/documents/details/${jsonData[data_entry].file}`;
     }

@@ -23,17 +23,21 @@ def index(request):
     start_date = timezone.now() - timezone.timedelta(days=31)
     end_date = timezone.now()
     queryset = Document.objects.filter(uploaded_at__range=(start_date, end_date)).values()
+    #my_dictionary = {}
 
     context = {
         'documents': queryset,
         'documentsAsJson': json.dumps(list(queryset), default=str),
         'range': range(Document.objects.all().__len__()),
+        #'testdataAsJson': my_dictionary
     }
+
     return render(request, 'dashboard.html', context)
     #now = datetime.now()
     #today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     #today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
     #objects = Document.objects.filter(Q(date__gte=today_min) & Q(date__lte=today_max))
+
 
 
 
