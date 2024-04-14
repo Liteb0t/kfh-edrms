@@ -8,13 +8,31 @@ from django.contrib.auth.decorators import login_required
 from home.forms import DocumentForm
 from home.models import Employee, Document, Pending
 import json
+from django.utils import timezone
+import datetime
+
 
 
 @login_required
 def index(request):
-    # we still pass 'request' which contains the logged-in user
-    # without it, the "logged in as [...]" would not work
-    return render(request, 'dashboard.html')
+    documents = Document.objects.all().values()
+    # Filter records where the datetime field falls within a specific range
+    start_date = timezone.now() - timezone.timedelta(days=1)
+    end_date = timezone.now()
+    queryset = Document.objects.filter(uploaded_at__range=(start_date, end_date))
+
+    context = {
+        'documents': queryset,
+        'documentsAsJson': json.dumps(list(documents), default=str),
+        'range': range(Document.objects.all().__len__()),
+    }
+    return render(request, 'dashboard.html', context)
+    #now = datetime.now()
+    #today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    #today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+    #objects = Document.objects.filter(Q(date__gte=today_min) & Q(date__lte=today_max))
+
+
 
 @login_required
 def Employees(request):

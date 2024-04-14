@@ -11,27 +11,27 @@
     <p>
        Welcome to Kuwait Finance House dashboard :)
     </p>
+    <h3>List of Recent Documents</h3>
 
-    <table class="fuze-table" id="pending-table"></table>
-    {{ pendingsAsJson|json_script:"mydata" }}
+    <table class="fuze-table" id="document-table"></table>
+
+ <!--Receive JSON data from view, to pass into the
+    json_data parameter of the fuze table-->
+    {{ documentsAsJson|json_script:"mydata" }}
     <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
-    const jsonData = JSON.parse(document.getElementById("mydata").textContent);
-    // Make table rows clickable
-    /*
-    var table = document.getElementById("pendingdocument-table");
-    for (var i = 0, row; i < table.rows.length; i++) {
-        const row_id = table.rows[i].id;
-        table.rows[i].addEventListener("click", () => {
-            // When a table row is clicked, go to details page with that employee ID
-            window.location.href = `detials/${row_id}`;
-        })
-    }
-     */
-    pending_table = new FuzeTable("pending-table",
+    const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
+    documents_table = new FuzeTable("document-table",
         {
-            title: "Pending"
-            ,json_data: JSON.parse(jsonData)
+            title: "documents"
+            ,json_data: jsonData
+            ,clickable_rows: true
+            ,on_row_click: onRowClick
         });
+
+    function onRowClick(data_entry) {
+        window.location.pathname = `/documents/details/${jsonData[data_entry].file}`;
+    }
+
     </script>
 {% endblock %}
