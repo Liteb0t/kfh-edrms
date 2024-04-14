@@ -10,6 +10,7 @@ urlpatterns = [
     path("documents/details/<str:file>", views.DocumentDetails, name="document_details"),
     # path("login/", views.Login, name="login"),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("correspondents/", views.Correspondents, name="correspondents"),
+    # path("correspondents/", views.Correspondents, name="correspondents"),
     path("upload/", views.Upload, name="upload"),
+    path("media/<str:path>", views.ViewProtectedFile, name="protected_media")
 ]
