@@ -1,13 +1,15 @@
 from django.shortcuts import render
 # from django.core import serializers
 # from django.core.files.storage import FileSystemStorage
-# from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
+from django.conf import settings
 # from django.template import loader
 from django.contrib.auth.decorators import login_required
 
 from home.forms import DocumentForm
 from home.models import Employee, Document, Pending
 import json
+import os
 
 
 @login_required
@@ -15,6 +17,7 @@ def index(request):
     # we still pass 'request' which contains the logged-in user
     # without it, the "logged in as [...]" would not work
     return render(request, 'dashboard.html')
+
 
 @login_required
 def Employees(request):
@@ -25,6 +28,7 @@ def Employees(request):
     }
     return render(request, 'employees.html', context)
 
+
 @login_required
 def EmployeeDetails(request, username):
     employee = Employee.objects.get(username=username)
@@ -32,6 +36,7 @@ def EmployeeDetails(request, username):
         'employee': employee
     }
     return render(request, 'employee-details.html', context)
+
 
 @login_required
 def Pendings(request):
@@ -42,6 +47,7 @@ def Pendings(request):
         'range': range(Pending.objects.all().__len__()),
     }
     return render(request, 'dashboard.html', context)
+
 
 @login_required
 def Documents(request):
@@ -63,9 +69,9 @@ def DocumentDetails(request, file):
     return render(request, 'document-details.html', context)
 
 
-@login_required
-def Correspondents(request):
-    return render(request, 'correspondents.html')
+# @login_required
+# def Correspondents(request):
+#     return render(request, 'correspondents.html')
 
 
 @login_required
@@ -79,3 +85,19 @@ def Upload(request):
         form = DocumentForm()
     # load page normally
     return render(request, 'upload.html', {'form': form})
+
+
+@login_required
+def ViewProtectedFile(request, path):
+    # Check user permissions or any other access control logic here
+    if not request.user.has_perm('home.view_document'):
+        return HttpResponseForbidden("You don't have permission to access this media.")
+
+    # Construct the full path to the media file
+    media_path = os.path.join(settings.MEDIA_ROOT, path)
+
+    # Serve the file
+    with open(media_path, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='application/octet-stream')
+
+    return response
