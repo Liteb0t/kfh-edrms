@@ -9,9 +9,9 @@
     <h2>Upload document</h2>
 
     <p>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
     </p>

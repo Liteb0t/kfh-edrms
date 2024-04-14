@@ -11,7 +11,7 @@ class DocumentForm(forms.ModelForm):
         ('high', 'High'),
     ]
     #add criticality field to form
-    criticlity = forms.ChoiceField(choices=CRITICALITY_CHOICES, label='Criticality')
+    criticality = forms.ChoiceField(choices=CRITICALITY_CHOICES, label='Criticality')
     class Meta:
         model = Document
         fields = ['title', 'file', 'criticality']
