@@ -40,7 +40,7 @@ class Document(models.Model):
 
 class DocumentAccessRequest(models.Model):
     id = models.AutoField(primary_key=True)
-    reason_given = models.CharField(max_length=500, null=True)
+    reason_given = models.CharField(max_length=2000, null=True)
     request_date = models.DateTimeField(auto_now_add=True)
     document = models.ForeignKey("Document", on_delete=models.CASCADE)  # When document is deleted request is deleted
     employee = models.ForeignKey("Employee", on_delete=models.CASCADE)  # When employee is deleted request is deleted

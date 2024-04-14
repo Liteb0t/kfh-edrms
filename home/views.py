@@ -90,11 +90,17 @@ def DocumentDetails(request, file):
         has_perm = True
     else:
         has_perm = False
-    mailto_link="joanna.prawosudowicz@gmail.com"
+    mailto_link = "joanna.prawosudowicz@gmail.com"
     context = {
-        'mailto_link' : mailto_link,
+        'mailto_link': mailto_link,
         'has_perm': has_perm,
-        'user' : request.user,
+        'user_permissions': {
+            'view_document': request.user.has_perm("view_document"),
+            'add_document': request.user.has_perm("add_document"),
+            'edit_document': request.user.has_perm("edit_document"),
+            'delete_document': request.user.has_perm("delete_document"),
+        },
+        'user': request.user,
         'document': document
     }
     return render(request, 'document-details.html', context)

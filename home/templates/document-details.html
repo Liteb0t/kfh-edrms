@@ -18,6 +18,10 @@
         {{ document.file }}</a>
         <a href="/documents/{{ document.id }}/delete">delete</a><br>
 
+    {% for key, value in user_permissions.items %}
+        {{ key }}: {{ value }}<br>
+    {% endfor %}
+
     {% if has_perm %}
         You have permission to documents.
     {% else %}
