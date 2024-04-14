@@ -133,7 +133,10 @@ def ViewProtectedFile(request, path):
 
 def delete_document(request, document_id):
     document = Document.objects.get(id=document_id)
-    document.delete()
+    if request.user.has_perm('home.delete_document'):
+        document.delete()
+    else:
+        return HttpResponseForbidden("You don't have permission to delete this file.")
     return render(request, 'delete_document.html', {'document': document})
 
 #def document_access(request, document_id):
