@@ -16,16 +16,16 @@ class DocumentForm(forms.ModelForm):
         model = Document
         fields = ['title', 'file', 'criticality']
 
-
-class CustomUserCreationForm(UserCreationForm):
-
-    class Meta:
-        model = Employee
-        fields = ("email", "first_name", "last_name")
-
-
-class CustomUserChangeForm(UserChangeForm):
-
-    class Meta:
-        model = Employee
-        fields = ("email", "first_name", "last_name")
+#
+# class CustomUserCreationForm(UserCreationForm):
+#
+#     class Meta:
+#         model = Employee
+#         fields = ("email", "first_name", "last_name")
+#
+#
+# class CustomUserChangeForm(UserChangeForm):
+#
+#     class Meta:
+#         model = Employee
+#         fields = ("email", "first_name", "last_name")

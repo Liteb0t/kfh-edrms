@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 # from django.template import loader
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Permission, User
 
 from home.forms import DocumentForm
 from home.models import Employee, Document, Pending
