@@ -44,7 +44,7 @@ def index(request):
 
 @login_required
 def Employees(request):
-    employees = Employee.objects.all().values('first_name', 'last_name', 'username', 'date_joined')
+    employees = Employee.objects.all().values('first_name', 'last_name', 'username', 'email', 'date_joined')
     context = {
         'employeesAsJson': json.dumps(list(employees), default=str),
         'range': range(Employee.objects.all().__len__()),
@@ -74,7 +74,7 @@ def Pendings(request):
 
 @login_required
 def Documents(request):
-    documents = Document.objects.all().values()
+    documents = Document.objects.all().values("title", "uploaded_at", "criticality", "file")
     context = {
         'documents': documents,
         'documentsAsJson': json.dumps(list(documents), default=str),
@@ -87,11 +87,13 @@ def Documents(request):
 def DocumentDetails(request, file):
     document = Document.objects.get(file=file)
     if request.user.has_perm("view_document", document):
-        mailto_link=""
+        has_perm = True
     else:
-        mailto_link="joanna.prawosudowicz@gmail.com"
+        has_perm = False
+    mailto_link="joanna.prawosudowicz@gmail.com"
     context = {
         'mailto_link' : mailto_link,
+        'has_perm': has_perm,
         'user' : request.user,
         'document': document
     }
@@ -109,7 +111,9 @@ def Upload(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.uploaded_by = request.user
+            obj.save()
     else:
         form = DocumentForm()
     # load page normally

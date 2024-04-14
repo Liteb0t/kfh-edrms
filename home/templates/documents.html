@@ -8,10 +8,6 @@
 {% block content %}
     <h2>List of documents</h2>
 
-    <label for="search">Search: </label>
-    <input type="text" id="search"><button>Search</button>
-    <br />
-    <br />
     <table class="fuze-table" id="document-table"></table>
 
     <!--Receive JSON data from view, to pass into the
@@ -23,6 +19,7 @@
     documents_table = new FuzeTable("document-table",
         {
             title: "documents"
+            ,entries_per_page: 10
             ,json_data: jsonData
             ,clickable_rows: true
             ,on_row_click: onRowClick
