@@ -14,5 +14,6 @@ urlpatterns = [
     path("upload/", views.Upload, name="upload"),
     path("media/<str:path>", views.ViewProtectedFile, name="protected_media"),
     path('documents/<int:document_id>/delete/', views.delete_document, name='delete_document'),
+    #path('documents/<int:document_id>/accessdenied/', views.document_access, name='access_denied'),
     # Other URL patterns
 ]

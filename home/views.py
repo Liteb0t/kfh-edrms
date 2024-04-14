@@ -86,7 +86,13 @@ def Documents(request):
 @login_required
 def DocumentDetails(request, file):
     document = Document.objects.get(file=file)
+    if request.user.has_perm("view_document", document):
+        mailto_link=""
+    else:
+        mailto_link="joanna.prawosudowicz@gmail.com"
     context = {
+        'mailto_link' : mailto_link,
+        'user' : request.user,
         'document': document
     }
     return render(request, 'document-details.html', context)
@@ -129,3 +135,7 @@ def delete_document(request, document_id):
     document = Document.objects.get(id=document_id)
     document.delete()
     return render(request, 'delete_document.html', {'document': document})
+
+#def document_access(request, document_id):
+ #   document = Document.objects.get(id=document_id)
+  #  return render(request, 'permission_denied.html', {'document': document})

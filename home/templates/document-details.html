@@ -16,7 +16,14 @@
         ID: {{ document.id }}<br>
         Link: <a href="/media/{{ document.file }}">
         {{ document.file }}</a>
-        <a href="/documents/{{ document.id }}/delete">delete</a>
+        <a href="/documents/{{ document.id }}/delete">delete</a><br>
+
+    {% if mailto_link == "" %}
+        You have permission to documents.
+    {% else %}
+        You do not have permission to access this document.
+        <a href="mailto:{{ mailto_link }}">request access</a> <br>
+    {% endif  %}
     </p>
 {% endblock %}
 
