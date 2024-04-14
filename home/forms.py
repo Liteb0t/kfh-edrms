@@ -4,9 +4,17 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
 class DocumentForm(forms.ModelForm):
+    # defining criticality choices
+    CRITICALITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ]
+    #add criticality field to form
+    criticlity = forms.ChoiceField(choices=CRITICALITY_CHOICES, label='Criticality')
     class Meta:
         model = Document
-        fields = ['title', 'file']
+        fields = ['title', 'file', 'criticality']
 
 
 class CustomUserCreationForm(UserCreationForm):

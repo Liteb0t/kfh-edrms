@@ -34,7 +34,8 @@ class Document(models.Model):
     # when Employee is deleted, uploaded_by becomes blank but Document remains
     uploaded_by = models.ForeignKey("Employee", on_delete=models.SET_NULL, null=True)
     # file_name = models.CharField(max_length=50, default="Sample_Bank_Document.pdf")
-    criticality = models.CharField(max_length=50, null=False, default = 'low')
+    criticality = models.CharField(max_length=50, null=False,
+                                   choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], default='low')
 
 
 class DocumentAccessRequest(models.Model):
