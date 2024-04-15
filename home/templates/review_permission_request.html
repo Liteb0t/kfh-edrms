@@ -1,0 +1,28 @@
+{% extends "master.html" %}
+{#{% load static %}#}
+
+{% block title %}
+    KFH - Review Permission Request
+{% endblock %}
+
+{% block content %}
+    <h2>Review Permission Request</h2>
+
+    <p>
+        Document: <a href="/documents/details/{{ document.file }}">{{ document.title }}</a><br>
+        Requestor: <a href="/employees/details/{{ request.employee.username }}">
+        {{ request.employee.first_name }}
+        {{ request.employee.last_name }} </a><br>
+        Requested permission: {{ request.requested_permission }}<br>
+        Request date: {{ request.request_date }}<br>
+        Reason: <br>
+        <span style="margin-left: 20px">{{ request.reason_given }}</span>
+    </p>
+
+    <form action="/review-permission-request/{{ request.id }}/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}

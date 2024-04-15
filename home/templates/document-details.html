@@ -17,18 +17,16 @@
         Link: <a href="/media/{{ document.file }}">
         {{ document.file }}</a>
         <a href="/documents/{{ document.id }}/delete">delete</a><br>
+    <br>
 
     {% for key, value in user_permissions.items %}
         {{ key }}: {{ value }}<br>
     {% endfor %}
 
-    {% if has_perm %}
-        You have permission to documents.
-    {% else %}
-        You do not have permission to access this document.
-        <a href="mailto:{{ mailto_link }}">Mail to author</a><br>
-        or submit the form below to request access: <br>
-    {% endif  %}
+    {% if not has_all_perms %}
+        <a href="/documents/{{ document.id }}/request-permissions">
+            Request more permissions</a>
+    {% endif %}
     </p>
 {% endblock %}
 

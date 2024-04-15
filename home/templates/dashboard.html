@@ -11,6 +11,10 @@
     <p>
        Welcome to Kuwait Finance House dashboard :)
     </p>
+
+
+    <table class="fuze-table" id="pending-table"></table>
+
     <h3>List of Recent Documents - last 30 days</h3>
 
 {#    <table class="fuze-table" id="requesting-table"></table>#}
@@ -19,17 +23,26 @@
 
  <!--Receive JSON data from view, to pass into the
     json_data parameter of the fuze table-->
-    {{ documentsAsJson|json_script:"mydata" }}
+    {{ pendingAsJson|json_script:"mydata1" }}
+    {{ documentsAsJson|json_script:"mydata2" }}
 {#    {{ testdataAsJson|json_script:"mydata" }}#}
     <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
-    const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
+    const jsonData1 = JSON.parse(JSON.parse(document.getElementById("mydata1").textContent));
+    documents_table = new FuzeTable("pending-table",
+        {
+            title: "Pending review"
+            ,json_data: jsonData1
+            ,clickable_rows: true
+            ,on_row_click: onRowClick1
+        });
+    const jsonData2 = JSON.parse(JSON.parse(document.getElementById("mydata2").textContent));
     documents_table = new FuzeTable("document-table",
         {
             title: "documents"
-            ,json_data: jsonData
+            ,json_data: jsonData2
             ,clickable_rows: true
-            ,on_row_click: onRowClick
+            ,on_row_click: onRowClick2
         });
      {#requesting_table = new FuzeTable("requesting-table",#}
      {#   {#}
@@ -38,8 +51,11 @@
      {#       ,clickable_rows: true#}
      {#       ,on_row_click: onRowClick#}
      {#   });#}
-    function onRowClick(data_entry) {
-        window.location.pathname = `/documents/details/${jsonData[data_entry].file}`;
+    function onRowClick1(data_entry) {
+        window.location.pathname = `/review-permission-request/${jsonData1[data_entry].id}/`;
+    }
+    function onRowClick2(data_entry) {
+        window.location.pathname = `/documents/details/${jsonData2[data_entry].file}`;
     }
 
     </script>

@@ -9,7 +9,7 @@ class FuzeTable {
 		var defaults = {
 			title: "Fuze Table"
 			,page: 1
-			,entries_per_page: 50
+			,entries_per_page: 10
 			,json_path: ""
 			,json_data: {}
 			,included_data: {}

@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 
 
 class Employee(AbstractUser):
@@ -28,7 +28,6 @@ class Branch(models.Model):
 class Document(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    # security_level = models.CharField(max_length=50)
     file = models.FileField(default="yes.png")
     uploaded_at = models.DateTimeField(auto_now_add=True)
     # when Employee is deleted, uploaded_by becomes blank but Document remains
@@ -42,14 +41,15 @@ class DocumentAccessRequest(models.Model):
     id = models.AutoField(primary_key=True)
     reason_given = models.CharField(max_length=2000, null=True)
     request_date = models.DateTimeField(auto_now_add=True)
+    requested_permission = models.CharField(max_length=100, null=False, choices=[
+        ('add_document', 'Upload Document'),
+        ('view_document', 'View Document'),
+        ('change_document', 'Change Document'),
+        ('delete_document', 'Delete Document'),
+    ], default='view_document')
+    pending = models.BooleanField(default=True)
     document = models.ForeignKey("Document", on_delete=models.CASCADE)  # When document is deleted request is deleted
-    employee = models.ForeignKey("Employee", on_delete=models.CASCADE)  # When employee is deleted request is deleted
-    supervisor = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="supervisor")
-
-
-class Pending(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    request = models.CharField(max_length=100)
-    owner = models.CharField(max_length=100)
-    due_at = models.DateTimeField(auto_now_add=True)
+    employee = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="requester")  # When employee is deleted request is deleted
+    # supervisor = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="supervisor")
+    request_groups = models.ManyToManyField(Group, null=True)
+    request_employees = models.ManyToManyField(Employee, null=True)
