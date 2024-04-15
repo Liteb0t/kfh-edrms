@@ -7,10 +7,11 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Permission, User
 
-from home.forms import DocumentForm
-from home.models import Employee, Document, Pending
+from home.forms import *
+from home.models import Employee, Document, DocumentAccessRequest
 import json
 from django.utils import timezone
+from guardian.shortcuts import assign_perm
 import datetime
 
 import os
@@ -25,7 +26,15 @@ def index(request):
     queryset = Document.objects.filter(uploaded_at__range=(start_date, end_date)).values()
     #my_dictionary = {}
 
+    # pending = DocumentAccessRequest.objects.all()
+    # .values("requested_permission", "request_date", "employee", "document")
+    pending = (DocumentAccessRequest.objects
+               .filter(request_employees=request.user)
+               .filter(pending=True)
+               .values("id", "requested_permission", "request_date", "employee", "document"))
+
     context = {
+        'pendingAsJson': json.dumps(list(pending), default=str),
         'documents': queryset,
         'documentsAsJson': json.dumps(list(queryset), default=str),
         'range': range(Document.objects.all().__len__()),
@@ -62,17 +71,6 @@ def EmployeeDetails(request, username):
 
 
 @login_required
-def Pendings(request):
-    pendings = Pending.objects.all().values()
-    context = {
-        'pendings': pendings,
-        'pendingsAsJson': json.dumps(list(pendings), default=str),
-        'range': range(Pending.objects.all().__len__()),
-    }
-    return render(request, 'dashboard.html', context)
-
-
-@login_required
 def Documents(request):
     documents = Document.objects.all().values("title", "uploaded_at", "criticality", "file")
     context = {
@@ -86,15 +84,24 @@ def Documents(request):
 @login_required
 def DocumentDetails(request, file):
     document = Document.objects.get(file=file)
-    if request.user.has_perm("view_document", document):
-        has_perm = True
+    if request.user.has_perm("view_document", document) and \
+            request.user.has_perm("add_document", document) and \
+            request.user.has_perm("edit_document", document) and \
+            request.user.has_perm("delete_document", document):
+        has_all_perms = True
     else:
-        has_perm = False
-    mailto_link="joanna.prawosudowicz@gmail.com"
+        has_all_perms = False
+    mailto_link = "joanna.prawosudowicz@gmail.com"
     context = {
-        'mailto_link' : mailto_link,
-        'has_perm': has_perm,
-        'user' : request.user,
+        'mailto_link': mailto_link,
+        'has_all_perms': has_all_perms,
+        'user_permissions': {
+            'view_document': request.user.has_perm("view_document", document),
+            'add_document': request.user.has_perm("add_document", document),
+            'edit_document': request.user.has_perm("edit_document", document),
+            'delete_document': request.user.has_perm("delete_document", document),
+        },
+        'user': request.user,
         'document': document
     }
     return render(request, 'document-details.html', context)
@@ -114,6 +121,7 @@ def Upload(request):
             obj = form.save(commit=False)
             obj.uploaded_by = request.user
             obj.save()
+            return RequestPermissions(request, obj.id)
     else:
         form = DocumentForm()
     # load page normally
@@ -137,12 +145,64 @@ def ViewProtectedFile(request, path):
 
 def delete_document(request, document_id):
     document = Document.objects.get(id=document_id)
-    if request.user.has_perm('home.delete_document'):
+    if request.user.has_perm('delete_document', document):
         document.delete()
     else:
         return HttpResponseForbidden("You don't have permission to delete this file.")
-    return render(request, 'delete_document.html', {'document': document})
+    return render(request, 'delete_document.html')
 
-#def document_access(request, document_id):
- #   document = Document.objects.get(id=document_id)
-  #  return render(request, 'permission_denied.html', {'document': document})
+
+@login_required
+def RequestPermissions(request, document_id):
+    document = Document.objects.get(id=document_id)
+    # process uploaded file
+    if request.method == 'POST':
+        form = DocumentAccessRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.employee = request.user
+            obj.document = document
+            obj.save()
+            form.save_m2m()
+            return index(request)
+        else:
+            print("something wasnt valid")
+    else:
+        form = DocumentAccessRequestForm(initial={"supervisor": document.uploaded_by})
+    # load page normally
+    return render(request, 'request-permissions.html', {'form': form})
+
+
+@login_required
+def ReviewPermissionRequest(request, request_id):
+    permission_request = DocumentAccessRequest.objects.get(id=request_id)
+    document = permission_request.document
+    requester = permission_request.employee
+
+    if request.method == 'POST':
+        form = ApproveOrRejectRequest(request.POST)
+        if form.is_valid():
+            if form.cleaned_data["choice"] == "approve":
+                print("FORM APPROVED!!!1!!!")
+                if permission_request.requested_permission == "view_document":
+                    assign_perm(permission_request.requested_permission, requester, document)
+                elif permission_request.requested_permission == "add_document":
+                    pass
+                elif permission_request.requested_permission == "delete_document":
+                    document.delete()
+                    return render(request, 'delete_document.html')
+            elif form.cleaned_data["choice"] == "reject":
+                if permission_request.requested_permission == "add_document":
+                    document.delete()
+            permission_request.pending = False
+            permission_request.save()
+    else:
+        form = ApproveOrRejectRequest()
+
+    return render(request, 'review_permission_request.html',
+                  {
+                      "document": document,
+                      "request": permission_request,
+                      "requester": requester,
+                      "form": form,
+                  })

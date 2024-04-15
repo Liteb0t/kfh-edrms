@@ -18,11 +18,31 @@ class DocumentForm(forms.ModelForm):
         fields = ['title', 'file', 'criticality']
 
 
-# class DocumentAccessRequestForm(forms.ModelForm):
-#     def __init__(self, **kwargs):
-#         self.document = kwargs.pop('document', None)
-#         self.employee = kwargs.pop('employee', None)
-#         super(DocumentAccessRequestForm, self).__init__(**kwargs)
-#
-#     class Meta:
-#         model = DocumentAccessRequest
+class DocumentAccessRequestForm(forms.ModelForm):
+    reason_given = forms.CharField(widget=forms.Textarea)
+    request_employees = forms.ModelMultipleChoiceField(queryset=Employee.objects.all())
+    class Meta:
+        model = DocumentAccessRequest
+        fields = ['reason_given', 'requested_permission', 'request_groups', 'request_employees']
+
+
+class ApproveOrRejectRequest(forms.Form):
+    choices = [
+        ('approve', 'Approve'),
+        ('reject', 'Reject'),
+    ]
+    choice = forms.ChoiceField(choices=choices)
+
+
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta:
+        model = Employee
+        fields = ("email", "first_name", "last_name")
+
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = Employee
+        fields = ("email", "first_name", "last_name")

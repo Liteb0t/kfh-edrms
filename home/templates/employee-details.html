@@ -16,7 +16,7 @@
         {% if employee.last_name != null %}
             {{ employee.last_name }}
         {% endif %}<br>
-        Email: {{ employee.email }}<br>
+        Email: <a href="mailto:{{ employee.email }}">{{ employee.email }}</a><br>
         Phone: {{ employee.phone }}<br>
         ID: {{ employee.id }}<br>
         Branch: <a href="TBA">{{ employee.branch.name }}</a><br>
