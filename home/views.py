@@ -109,7 +109,7 @@ def DocumentDetails(request, file):
 
 # @login_required
 # def Correspondents(request):
-#     return render(request, 'correspondents.html')
+#     return render(request, 'password_reset_form.html')
 
 
 @login_required
