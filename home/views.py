@@ -118,6 +118,7 @@ def Upload(request):
             obj = form.save(commit=False)
             obj.uploaded_by = request.user
             obj.save()
+            return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
             # return RequestPermissions(request, obj.id)
     else:
         form = DocumentForm()
