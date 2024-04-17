@@ -82,15 +82,13 @@ def Documents(request):
 def DocumentDetails(request, file):
     document = Document.objects.get(file=file)
     if request.user.has_perm("view_document", document) and \
-            request.user.has_perm("add_document", document) and \
             request.user.has_perm("edit_document", document) and \
             request.user.has_perm("delete_document", document):
         has_all_perms = True
     else:
         has_all_perms = False
-    mailto_link = "joanna.prawosudowicz@gmail.com"
     context = {
-        'mailto_link': mailto_link,
+        'mailto_link': document.uploaded_by.email,
         'has_all_perms': has_all_perms,
         'user_permissions': {
             'view_document': request.user.has_perm("view_document", document),
@@ -118,7 +116,10 @@ def Upload(request):
             obj = form.save(commit=False)
             obj.uploaded_by = request.user
             obj.save()
+            return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
             # return RequestPermissions(request, obj.id)
+        else:
+            return render(request, 'upload.html', {'form': form, 'messages': ["Upload failed"]})
     else:
         form = DocumentForm()
     # load page normally
