@@ -48,9 +48,6 @@ def index(request):
     #objects = Document.objects.filter(Q(date__gte=today_min) & Q(date__lte=today_max))
 
 
-
-
-
 @login_required
 def Employees(request):
     employees = Employee.objects.all().values('first_name', 'last_name', 'username', 'email', 'date_joined')
@@ -97,7 +94,7 @@ def DocumentDetails(request, file):
         'has_all_perms': has_all_perms,
         'user_permissions': {
             'view_document': request.user.has_perm("view_document", document),
-            'add_document': request.user.has_perm("add_document", document),
+            # 'add_document': request.user.has_perm("add_document", document),
             'edit_document': request.user.has_perm("edit_document", document),
             'delete_document': request.user.has_perm("delete_document", document),
         },
@@ -121,7 +118,7 @@ def Upload(request):
             obj = form.save(commit=False)
             obj.uploaded_by = request.user
             obj.save()
-            return RequestPermissions(request, obj.id)
+            # return RequestPermissions(request, obj.id)
     else:
         form = DocumentForm()
     # load page normally
@@ -142,6 +139,7 @@ def ViewProtectedFile(request, path):
         response = HttpResponse(file.read(), content_type='application/octet-stream')
 
     return response
+
 
 def delete_document(request, document_id):
     document = Document.objects.get(id=document_id)
