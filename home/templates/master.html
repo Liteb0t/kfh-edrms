@@ -36,8 +36,8 @@
 <div id="content-main">
     {% if messages %}
         {% for message in messages %}
-        {{ message }}<br>
-    {% endfor %}
+            {{ message }}<br>
+        {% endfor %}
     {% endif %}
     {% block content %} <!-- it imports  -->
     {% endblock %}

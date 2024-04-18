@@ -127,17 +127,69 @@ def Upload(request):
 
 
 @login_required
-def ViewProtectedFile(request, path):
+def EditDocument(request, document_id):
+    document = Document.objects.get(id=document_id)
+    if request.user.has_perm("edit_document", document):
+        # process uploaded file
+        if request.method == 'POST':
+            form = DocumentForm(request.POST, request.FILES)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.uploaded_by = request.user
+                obj.save()
+                return render(request, 'upload.html', {'form': form, 'messages': ["Edited successfully"]})
+                # return RequestPermissions(request, obj.id)
+            else:
+                return render(request, 'upload.html', {'form': form, 'messages': ["Edit failed"]})
+        else:
+            form = DocumentForm(instance=document)
+        # load page normally
+        return render(request, 'upload.html', {'form': form})
+    else:
+        return HttpResponseForbidden("You don't have permission to edit this document. Go back and request permissions.")
+
+
+# @login_required
+# def ViewProtectedFile(request, path):
+#     # Check user permissions or any other access control logic here
+#     if not request.user.has_perm('home.view_document'):
+#         return HttpResponseForbidden("You don't have permission to access this media.")
+#
+#     print("ViewProtectedFile path:", path)
+#     # Construct the full path to the media file
+#     media_path = os.path.join(settings.MEDIA_ROOT, path)
+#
+#     # Serve the file
+#     with open(media_path, 'rb') as file:
+#         response = HttpResponse(file.read(), content_type='application/octet-stream')
+#
+#     return response
+
+
+@login_required
+def ViewDocument(request, document_id):
+    document = Document.objects.get(id=document_id)
+    path = document.file.name
     # Check user permissions or any other access control logic here
-    if not request.user.has_perm('home.view_document'):
+    if not request.user.has_perm('home.view_document', document):
         return HttpResponseForbidden("You don't have permission to access this media.")
 
+    print("ViewDocument path:", path)
     # Construct the full path to the media file
     media_path = os.path.join(settings.MEDIA_ROOT, path)
 
+    if path.endswith('.pdf'):
+        temp_content_type = "application/pdf"
+    elif path.endswith('.png'):
+        temp_content_type = "image/png"
+    elif path.endswith('.jpg'):
+        temp_content_type = "image/jpeg"
+    else:
+        temp_content_type = "application/octet-stream"
+
     # Serve the file
     with open(media_path, 'rb') as file:
-        response = HttpResponse(file.read(), content_type='application/octet-stream')
+        response = HttpResponse(file.read(), content_type=temp_content_type)
 
     return response
 

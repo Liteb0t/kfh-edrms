@@ -10,23 +10,31 @@
     </h2>
     <p>
         Uploaded at: {{ document.uploaded_at }}<br>
-        Author: <a href="/employees/details/{{ document.uploaded_by.username }}">
+        Author: <a href="/employees/details/{{ document.uploaded_by.username }}/">
         {{ document.uploaded_by.first_name }}
         {{ document.uploaded_by.last_name }} </a><br>
         ID: {{ document.id }}<br>
-        Link: <a href="/media/{{ document.file }}">
+        Link: <a href="/documents/{{ document.id }}/view/">
         {{ document.file }}</a>
-        <a href="/documents/{{ document.id }}/delete">delete</a><br>
-    <br>
+        <a href="/documents/{{ document.id }}/delete/">delete</a><br>
+        <a href="/documents/{{ document.id }}/edit/">Edit</a>
+        <br>
+        <table>
+            <tr>
+                <th>Action</th>
+                <th>Has permission</th>
+            </tr>
+            {% for key, value in user_permissions.items %}
+                <tr>
+                    <td>{{ key }}</td><td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </table>
 
-    {% for key, value in user_permissions.items %}
-        {{ key }}: {{ value }}<br>
-    {% endfor %}
-
-    {% if not has_all_perms %}
-        <a href="/documents/{{ document.id }}/request-permissions">
-            Request more permissions</a>
-    {% endif %}
+        {% if not has_all_perms %}
+            <a href="/documents/{{ document.id }}/request-permissions">
+                Request more permissions</a>
+        {% endif %}
     </p>
 {% endblock %}
 
