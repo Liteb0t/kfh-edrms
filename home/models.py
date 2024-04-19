@@ -51,5 +51,5 @@ class DocumentAccessRequest(models.Model):
     document = models.ForeignKey("Document", on_delete=models.CASCADE)  # When document is deleted request is deleted
     employee = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="requester")  # When employee is deleted request is deleted
     # supervisor = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="supervisor")
-    request_groups = models.ManyToManyField(Group, null=True)
-    request_employees = models.ManyToManyField(Employee, null=True)
+    request_groups = models.ManyToManyField(Group, blank=True)
+    request_employees = models.ManyToManyField(Employee, blank=True)
