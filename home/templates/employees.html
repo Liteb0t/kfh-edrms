@@ -18,10 +18,21 @@
             ,json_data: jsonData
             ,clickable_rows: true
             ,on_row_click: onRowClick
+            ,columns: {
+                first_name: {
+                    display_name: "first name"
+                }
+                ,last_name: {
+                    display_name: "list name"
+                }
+                ,date_joined: {
+                    display_name: "date joined"
+                }
+            }
         });
 
     function onRowClick(data_entry) {
-        window.location.pathname = `/employees/details/${jsonData[data_entry].username}`;
+        window.location.pathname = `/employees/${jsonData[data_entry].username}/`;
     }
     </script>
 {% endblock %}

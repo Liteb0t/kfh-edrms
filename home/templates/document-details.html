@@ -10,7 +10,7 @@
     </h2>
     <p>
         Uploaded at: {{ document.uploaded_at }}<br>
-        Author: <a href="/employees/details/{{ document.uploaded_by.username }}/">
+        Author: <a href="/employees/{{ document.uploaded_by.username }}/">
         {{ document.uploaded_by.first_name }}
         {{ document.uploaded_by.last_name }} </a><br>
         ID: {{ document.id }}<br>

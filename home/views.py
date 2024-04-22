@@ -69,7 +69,7 @@ def EmployeeDetails(request, username):
 
 @login_required
 def Documents(request):
-    documents = Document.objects.all().values("title", "uploaded_at", "criticality", "file")
+    documents = Document.objects.all().values("id", "title", "uploaded_at", "criticality")
     context = {
         'documents': documents,
         'documentsAsJson': json.dumps(list(documents), default=str),
@@ -79,8 +79,8 @@ def Documents(request):
 
 
 @login_required
-def DocumentDetails(request, file):
-    document = Document.objects.get(file=file)
+def DocumentDetails(request, document_id):
+    document = Document.objects.get(id=document_id)
     if request.user.has_perm("view_document", document) and \
             request.user.has_perm("edit_document", document) and \
             request.user.has_perm("delete_document", document):
