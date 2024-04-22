@@ -35,6 +35,11 @@ class Document(models.Model):
 
     # delete 7 years after upload date to comply with data-protection regulation
     delete_at = models.DateTimeField(default=timezone.now() + timezone.timedelta(days=365*7))
+
+    # will show on "recently deleted" documents page if true.
+    # used when upload permission is denied
+    manually_deleted = models.BooleanField(default=False)
+
     # when Employee is deleted, uploaded_by becomes blank but Document remains
     uploaded_by = models.ForeignKey("Employee", on_delete=models.SET_NULL, null=True)
     # file_name = models.CharField(max_length=50, default="Sample_Bank_Document.pdf")

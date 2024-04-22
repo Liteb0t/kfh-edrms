@@ -6,12 +6,16 @@
 {% endblock %}
 
 {% block sub-nav %}
-    <div class="entry" id="selected"><a href="/documents/">All</a></div>
-    <div class="entry"><a href="./recently-deleted/">Recently Deleted</a></div>
+    <div class="entry"><a href="/documents/">All</a></div>
+    <div class="entry" id="selected"><a href="./recently-deleted/">Recently Deleted</a></div>
 {% endblock %}
 
 {% block content %}
-    <h2>List of documents</h2>
+    <h2>Recently Deleted</h2>
+
+    <p>
+    Documents will be wiped from the database 30 days after being marked for deletion...
+    </p>
 
     <table class="fuze-table" id="document-table"></table>
 
@@ -23,7 +27,7 @@
     const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
     documents_table = new FuzeTable("document-table",
         {
-            title: "Documents"
+            title: "Documents marked for deletion"
             ,entries_per_page: 10
             ,json_data: jsonData
             ,clickable_rows: true
@@ -32,8 +36,8 @@
                 id: {
                     visible: false
                 }
-                ,uploaded_at: {
-                    display_name: "uploaded at"
+                ,delete_at: {
+                    display_name: "will be erased at"
                 }
             }
         });

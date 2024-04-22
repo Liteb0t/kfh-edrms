@@ -7,7 +7,7 @@ html {
 
 body {
     display: grid;
-    grid-template-rows: 62px auto;
+    grid-template-rows: 62px 2em auto;
     grid-template-columns: 200px auto;
     border-left: 2px solid #000;
     border-right: 2px solid #000;
@@ -69,7 +69,7 @@ header #login-button span {
 /* SIDE NAVIGATION MENU */
 
 nav {
-    grid-row: 2;
+    grid-row: 2 / 4;
     grid-column: 1;
     display: flex;
     flex-flow: column;
@@ -97,17 +97,43 @@ nav .login-button {
 
 /* MAIN CONTENT */
 
-#content-main {
+.sub-navigation {
     grid-row: 2;
+    grid-column: 2;
+    display: flex;
+}
+
+.sub-navigation .entry {
+    /*! border: 2px solid #020; */
+    /*! margin: 1em 3em 1em 3em; */
+    /*! float: left; */
+    /*! display: block; */
+    /*! float: ; */
+    padding: 4px;
+    border-right: 3px solid black;
+    border-bottom: 3px solid black;
+}
+
+.sub-navigation .entry:first-child {
+    width: 4px;
+}
+
+.sub-navigation .entry:last-child {
+    /*! border: 5px solid aqua; */
+    flex-grow: 1;
+    border-right: none;
+}
+
+.sub-navigation #selected {
+    border-bottom: 3px solid #bbb;
+}
+
+#content-main {
+    grid-row: 3;
     grid-column: 2;
     padding: 10px;
     float: left;
     background-color: white;
-}
-
-.employees {
-    display: flex;
-    flex-flow: column;
 }
 
 /* TABLE */

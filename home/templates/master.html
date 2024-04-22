@@ -34,6 +34,13 @@
     <a href="{% url 'upload' %}">Upload</a>
 </nav>
 
+<div class="sub-navigation">
+    <div class="entry"></div>
+    {% block sub-nav %}
+    {% endblock %}
+    <div class="entry"></div>
+</div>
+
 <div id="content-main">
     {% if messages %}
         {% for message in messages %}

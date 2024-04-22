@@ -37,7 +37,6 @@ def index(request):
         'pendingAsJson': json.dumps(list(pending), default=str),
         'documents': queryset,
         'documentsAsJson': json.dumps(list(queryset), default=str),
-        'range': range(Document.objects.all().__len__()),
     }
 
     return render(request, 'dashboard.html', context)
@@ -52,7 +51,7 @@ def Employees(request):
     employees = Employee.objects.all().values('first_name', 'last_name', 'username', 'email', 'date_joined')
     context = {
         'employeesAsJson': json.dumps(list(employees), default=str),
-        'range': range(Employee.objects.all().__len__()),
+        # 'range': range(Employee.objects.all().__len__()),
     }
     return render(request, 'employees.html', context)
 
@@ -85,9 +84,20 @@ def Documents(request):
     context = {
         'documents': documents,
         'documentsAsJson': json.dumps(list(documents), default=str),
-        'range': range(Document.objects.all().__len__()),
     }
     return render(request, 'documents.html', context)
+
+
+@login_required
+def RecentlyDeletedDocuments(request):
+    documents = (Document.objects.all()
+                 .filter(manually_deleted=True)
+                 .values("id", "title", "delete_at"))
+    context = {
+        'documents': documents,
+        'documentsAsJson': json.dumps(list(documents), default=str),
+    }
+    return render(request, 'documents-recently-deleted.html', context)
 
 
 @login_required
@@ -279,7 +289,9 @@ def ReviewPermissionRequest(request, request_id):
                 elif permission_request.requested_permission == "add_document":
                     message = "Validated uploaded document"
                 elif permission_request.requested_permission == "delete_document":
-                    document.delete()
+                    # document.delete()
+                    document.manually_deleted = True
+                    document.delete_at = timezone.now() + timezone.timedelta(days=30)
                     message = "Document deleted"
                 else:
                     message = "Form is approved"
@@ -287,7 +299,9 @@ def ReviewPermissionRequest(request, request_id):
             elif form.cleaned_data["choice"] == "reject":
 
                 if permission_request.requested_permission == "add_document":
-                    document.delete()
+                    # document.delete()
+                    document.manually_deleted = True
+                    document.delete_at = timezone.now() + timezone.timedelta(days=30)
                     message = "Upload invalidated. Document deleted"
                 else:
                     message = "Permission rejected"
