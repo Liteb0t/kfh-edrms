@@ -61,8 +61,16 @@ def Employees(request):
 @login_required
 def EmployeeDetails(request, username):
     employee = Employee.objects.get(username=username)
+    documents_uploaded = (Document.objects.filter(uploaded_by=employee)
+                          .values("id", "title", "uploaded_at", "criticality"))
+    print("Documents uploaded:", documents_uploaded)
+    if not documents_uploaded:
+        documents_uploaded = "none"
+    else:
+        documents_uploaded = json.dumps(list(documents_uploaded), default=str)
     context = {
-        'employee': employee
+        'employee': employee,
+        'documents_uploaded': documents_uploaded,
     }
     return render(request, 'employee-details.html', context)
 
