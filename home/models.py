@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
+from django.utils import timezone
 
 
 class Employee(AbstractUser):
@@ -31,6 +32,9 @@ class Document(models.Model):
     title = models.CharField(max_length=100)
     file = models.FileField(default="yes.png")
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    # delete 7 years after upload date to comply with data-protection regulation
+    delete_at = models.DateTimeField(default=timezone.now() + timezone.timedelta(days=365*7))
     # when Employee is deleted, uploaded_by becomes blank but Document remains
     uploaded_by = models.ForeignKey("Employee", on_delete=models.SET_NULL, null=True)
     # file_name = models.CharField(max_length=50, default="Sample_Bank_Document.pdf")
@@ -45,7 +49,7 @@ class DocumentAccessRequest(models.Model):
     requested_permission = models.CharField(max_length=100, null=False, choices=[
         ('add_document', 'Upload Document'),
         ('view_document', 'View Document'),
-        ('change_document', 'Change Document'),
+        ('change_document', 'Edit Document'),
         ('delete_document', 'Delete Document'),
     ], default='view_document')
     pending = models.BooleanField(default=True)

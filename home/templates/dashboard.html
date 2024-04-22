@@ -39,10 +39,18 @@
     const jsonData2 = JSON.parse(JSON.parse(document.getElementById("mydata2").textContent));
     documents_table = new FuzeTable("document-table",
         {
-            title: "documents"
+            title: "Documents"
             ,json_data: jsonData2
             ,clickable_rows: true
             ,on_row_click: onRowClick2
+            ,columns: {
+                id: {
+                    visible: false
+                }
+                ,uploaded_at: {
+                    display_name: "uploaded at"
+                }
+            }
         });
      {#requesting_table = new FuzeTable("requesting-table",#}
      {#   {#}
@@ -55,7 +63,7 @@
         window.location.pathname = `/review-permission-request/${jsonData1[data_entry].id}/`;
     }
     function onRowClick2(data_entry) {
-        window.location.pathname = `/documents/details/${jsonData2[data_entry].file}`;
+        window.location.pathname = `/documents/${jsonData2[data_entry].id}/`;
     }
 
     </script>

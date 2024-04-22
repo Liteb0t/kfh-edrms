@@ -23,8 +23,8 @@ def index(request):
     # Filter records where the datetime field falls within a specific range
     start_date = timezone.now() - timezone.timedelta(days=31)
     end_date = timezone.now()
-    queryset = Document.objects.filter(uploaded_at__range=(start_date, end_date)).values()
-    #my_dictionary = {}
+    queryset = (Document.objects.filter(uploaded_at__range=(start_date, end_date))
+                .values("id", "title", "uploaded_at", "criticality"))
 
     # pending = DocumentAccessRequest.objects.all()
     # .values("requested_permission", "request_date", "employee", "document")
@@ -38,7 +38,6 @@ def index(request):
         'documents': queryset,
         'documentsAsJson': json.dumps(list(queryset), default=str),
         'range': range(Document.objects.all().__len__()),
-        #'testdataAsJson': my_dictionary
     }
 
     return render(request, 'dashboard.html', context)
@@ -147,6 +146,7 @@ def Upload(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uploaded_by = request.user
+            obj.delete_at = timezone.now() + timezone.timedelta(days=365*7)
             obj.save()
             return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
             # return RequestPermissions(request, obj.id)
@@ -206,10 +206,10 @@ def ViewDocument(request, document_id):
     if not request.user.has_perm('home.view_document', document):
         return HttpResponseForbidden("You don't have permission to access this media.")
 
-    print("ViewDocument path:", path)
     # Construct the full path to the media file
     media_path = os.path.join(settings.MEDIA_ROOT, path)
 
+    # Can i do this more easily?
     if path.endswith('.pdf'):
         temp_content_type = "application/pdf"
     elif path.endswith('.png'):
@@ -261,6 +261,7 @@ def ReviewPermissionRequest(request, request_id):
     permission_request = DocumentAccessRequest.objects.get(id=request_id)
     document = permission_request.document
     requester = permission_request.employee
+    messages = []
 
     if request.method == 'POST':
         form = ApproveOrRejectRequest(request.POST)
@@ -269,14 +270,26 @@ def ReviewPermissionRequest(request, request_id):
                 print("FORM APPROVED!!!1!!!")
                 if permission_request.requested_permission == "view_document":
                     assign_perm(permission_request.requested_permission, requester, document)
+                    message = "Granted view permission"
                 elif permission_request.requested_permission == "add_document":
-                    pass
+                    message = "Validated uploaded document"
                 elif permission_request.requested_permission == "delete_document":
                     document.delete()
-                    return render(request, 'delete_document.html')
+                    message = "Document deleted"
+                else:
+                    message = "Form is approved"
+                    # return render(request, 'delete_document.html')
             elif form.cleaned_data["choice"] == "reject":
+
                 if permission_request.requested_permission == "add_document":
                     document.delete()
+                    message = "Upload invalidated. Document deleted"
+                else:
+                    message = "Permission rejected"
+            else:
+                message = "Error - Invalid choice"
+            if message:
+                messages = [message]
             permission_request.pending = False
             permission_request.save()
     else:
@@ -288,4 +301,5 @@ def ReviewPermissionRequest(request, request_id):
                       "request": permission_request,
                       "requester": requester,
                       "form": form,
+                      "messages": messages,
                   })
