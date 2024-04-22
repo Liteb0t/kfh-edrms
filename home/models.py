@@ -11,7 +11,8 @@ class Employee(AbstractUser):
 
     # PROTECT: Employees must be reassigned before branch/role can be deleted
     branch = models.ForeignKey("Branch", on_delete=models.PROTECT, default=None, null=True)
-    role = models.ForeignKey("Role", on_delete=models.PROTECT, default=None, null=True)
+    # "roles" are now handled as groups in Django's permission system
+    # role = models.ForeignKey("Role", on_delete=models.PROTECT, default=None, null=True)
 
 
 class Role(models.Model):

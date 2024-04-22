@@ -1,0 +1,52 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+    {{ branch.name }} Branch
+{% endblock %}
+
+{% block content %}
+    <h2>
+        {{ branch.name }}
+    </h2>
+    <p>
+        Address: {{ branch.address }}<br>
+        ID: {{ employee.id }}<br>
+    </p>
+    <h3>Employees at this branch</h3>
+    {% if employees_at_this_branch == "none" %}
+        <p>None</p>
+    {% else %}
+    <p>
+        <table class="fuze-table" id="employees_at_this_branch"></table>
+    </p>
+    {{ employees_at_this_branch|json_script:"mydata" }}
+    <script src="{% static 'fuze_tables.js' %}"></script>
+    <script>
+    const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
+    documents_table = new FuzeTable("employees_at_this_branch",
+        {
+            title: "Employees"
+            ,entries_per_page: 10
+            ,json_data: jsonData
+            ,clickable_rows: true
+            ,on_row_click: onRowClick
+            ,columns: {
+                first_name: {
+                    display_name: "first name"
+                }
+                ,last_name: {
+                    display_name: "last name"
+                }
+                ,date_joined: {
+                    display_name: "date joined"
+                }
+            }
+        });
+
+    function onRowClick(data_entry) {
+        window.location.href = `/employees/${jsonData[data_entry].username}/`;
+    }
+    </script>
+    {% endif %}
+{% endblock %}

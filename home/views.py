@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Permission, User
 
 from home.forms import *
-from home.models import Employee, Document, DocumentAccessRequest
+from home.models import Employee, Document, DocumentAccessRequest, Branch
 import json
 from django.utils import timezone
 from guardian.shortcuts import assign_perm
@@ -108,6 +108,30 @@ def DocumentDetails(request, document_id):
         'document': document
     }
     return render(request, 'document-details.html', context)
+
+
+def Branches(request):
+    branches = Branch.objects.all().values()
+    context = {
+        'branchesAsJson': json.dumps(list(branches), default=str),
+    }
+    return render(request, 'branches.html', context)
+
+
+def BranchDetails(request, branch_id):
+    branch = Branch.objects.get(id=branch_id)
+    employees_at_this_branch = (Employee.objects.filter(branch_id=branch_id)
+                          .values('first_name', 'last_name', 'username', 'email', 'date_joined'))
+    print("Documents uploaded:", employees_at_this_branch)
+    if not employees_at_this_branch:
+        employees_at_this_branch = "none"
+    else:
+        employees_at_this_branch = json.dumps(list(employees_at_this_branch), default=str)
+    context = {
+        'branch': branch,
+        'employees_at_this_branch': employees_at_this_branch,
+    }
+    return render(request, 'branch-details.html', context)
 
 
 # @login_required

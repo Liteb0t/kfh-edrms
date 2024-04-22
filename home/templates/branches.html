@@ -1,0 +1,28 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+    KFH - Branches
+{% endblock %}
+
+{% block content %}
+    <h2>List of branches</h2>
+    <table class="fuze-table" id="branches-table"></table>
+    {{ branchesAsJson|json_script:"mydata" }}
+    <script src="{% static 'fuze_tables.js' %}"></script>
+    <script>
+    const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
+    employees_table = new FuzeTable("branches-table",
+        {
+            title: "Branches"
+            ,json_data: jsonData
+            ,clickable_rows: true
+            ,on_row_click: onRowClick
+        });
+
+    function onRowClick(data_entry) {
+        window.location.href = `/branches/${jsonData[data_entry].id}/`;
+        // window.location.search = "";
+    }
+    </script>
+{% endblock %}
