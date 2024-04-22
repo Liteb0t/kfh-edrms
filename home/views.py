@@ -67,9 +67,14 @@ def EmployeeDetails(request, username):
         documents_uploaded = "none"
     else:
         documents_uploaded = json.dumps(list(documents_uploaded), default=str)
+    if not employee.last_login:
+        employee_last_login = "Never"
+    else:
+        employee_last_login = employee.last_login
     context = {
         'employee': employee,
         'documents_uploaded': documents_uploaded,
+        'employee_last_login': employee_last_login,
     }
     return render(request, 'employee-details.html', context)
 

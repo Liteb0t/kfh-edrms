@@ -19,10 +19,8 @@
         {% endif %}<br>
         Email: <a href="mailto:{{ employee.email }}">{{ employee.email }}</a><br>
         Phone: {{ employee.phone }}<br>
-        ID: {{ employee.id }}<br>
-        Branch: <a href="TBA">{{ employee.branch.name }}</a><br>
-        Role: {{ employee.role.name }}<br>
-        Last logged in: {{ employee.last_login }}<br>
+        Branch: <a href="/branches/{{ employee.branch.id }}/">{{ employee.branch.name }}</a><br>
+        Last logged in: {{ employee_last_login }}<br>
     </p>
     <h3>
         Documents uploaded by this employee

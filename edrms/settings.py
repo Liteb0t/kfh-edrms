@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'guardian',
+    'django_crontab',
     # 'audit_trail',
 ]
 
@@ -110,6 +111,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CRONJOBS = [
+    # Runs clean_documents function in home/tasks.py
+    # every day at midnight
+    ('0 0 * * *', 'home.tasks.clean_documents')
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
