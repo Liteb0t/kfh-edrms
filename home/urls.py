@@ -14,6 +14,7 @@ urlpatterns = [
     path("branches/", views.Branches, name="branches"),
     path("branches/<int:branch_id>/", views.BranchDetails, name="branch_details"),
     path("documents/", views.Documents, name="documents"),
+    path("documents/recently-uploaded/", views.RecentlyUploadedDocuments, name="recently_uploaded_documents"),
     path("documents/recently-deleted/", views.RecentlyDeletedDocuments, name="recently_deleted_documents"),
     path("documents/<int:document_id>/", views.DocumentDetails, name="document_details"),
     path('documents/<int:document_id>/delete/', views.delete_document, name='delete_document'),

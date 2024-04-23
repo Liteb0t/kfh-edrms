@@ -5,6 +5,15 @@
     KFH - Employees
 {% endblock %}
 
+{% block sub-nav %}
+    <div class="sub-navigation">
+    <div class="entry" id="before-buttons"></div>
+    <a href="/employees/"><div class="entry" id="selected">All</div></a>
+    <a href="/admin/"><div class="entry">Manage Employees</div></a>
+    <div class="entry" id="after-buttons"></div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <h2>List of employees</h2>
     <table class="fuze-table" id="employees-table"></table>

@@ -34,14 +34,9 @@
     <a href="{% url 'upload' %}">Upload</a>
 </nav>
 
-<div class="sub-navigation">
-    <div class="entry"></div>
-    {% block sub-nav %}
-    {% endblock %}
-    <div class="entry"></div>
-</div>
-
 <div id="content-main">
+    {% block sub-nav %}{% endblock %}
+    <div id="below-nav">
     {% if messages %}
         {% for message in messages %}
             {{ message }}<br>
@@ -49,6 +44,7 @@
     {% endif %}
     {% block content %} <!-- it imports  -->
     {% endblock %}
+    </div>
 </div>
 </body>
 </html>

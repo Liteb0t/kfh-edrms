@@ -8,15 +8,15 @@
 {% block sub-nav %}
     <div class="sub-navigation">
     <div class="entry" id="before-buttons"></div>
-    <a href="/documents/"><div class="entry" id="selected">All</div></a>
-    <a href="/documents/recently-uploaded/"><div class="entry">Recently Uploaded</div></a>
+    <a href="/documents/"><div class="entry">All</div></a>
+    <a href="/documents/recently-uploaded/"><div class="entry" id="selected">Recently Uploaded</div></a>
     <a href="/documents/recently-deleted/"><div class="entry">Recently Deleted</div></a>
     <div class="entry" id="after-buttons"></div>
     </div>
 {% endblock %}
 
 {% block content %}
-    <h2>List of documents</h2>
+    <h2>Recently Uploaded</h2>
 
     <table class="fuze-table" id="document-table"></table>
 
@@ -28,7 +28,7 @@
     const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
     documents_table = new FuzeTable("document-table",
         {
-            title: "Documents"
+            title: "Documents uploaded last 30 days"
             ,entries_per_page: 10
             ,json_data: jsonData
             ,clickable_rows: true

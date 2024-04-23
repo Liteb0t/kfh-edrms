@@ -89,6 +89,24 @@ def Documents(request):
 
 
 @login_required
+def RecentlyUploadedDocuments(request):
+    documents = (Document.objects.all()
+                 .filter(manually_deleted=True)
+                 .values("id", "title", "delete_at"))
+
+    start_date = timezone.now() - timezone.timedelta(days=31)
+    end_date = timezone.now()
+    documents = (Document.objects.filter(uploaded_at__range=(start_date, end_date))
+                .values("id", "title", "uploaded_at", "criticality"))
+
+    context = {
+        'documents': documents,
+        'documentsAsJson': json.dumps(list(documents), default=str),
+    }
+    return render(request, 'documents-recently-uploaded.html', context)
+
+
+@login_required
 def RecentlyDeletedDocuments(request):
     documents = (Document.objects.all()
                  .filter(manually_deleted=True)
@@ -163,6 +181,10 @@ def Upload(request):
             obj.uploaded_by = request.user
             obj.delete_at = timezone.now() + timezone.timedelta(days=365*7)
             obj.save()
+            document = Document.objects.get(id=obj.id)
+            assign_perm("view_document", request.user, document)
+            assign_perm("edit_document", request.user, document)
+            assign_perm("delete_document", request.user, document)
             return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
             # return RequestPermissions(request, obj.id)
         else:
