@@ -5,6 +5,15 @@
     {{ document.id }} - {{ document.title }}
 {% endblock %}
 
+{% block sub-nav %}
+    <div class="sub-navigation">
+    <div class="entry" id="before-buttons"></div>
+    <a href="../"><div class="entry">Details</div></a>
+    <a href="../history/"><div class="entry" id="selected">History</div></a>
+    <div class="entry" id="after-buttons"></div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <h2>
         {{ document.title }} - History

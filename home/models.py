@@ -65,7 +65,7 @@ class DocumentAccessRequest(models.Model):
     requested_permission = models.CharField(max_length=100, null=False, choices=[
         ('add_document', 'Upload Document'),
         ('view_document', 'View Document'),
-        ('edit_document', 'Edit Document'),
+        ('change_document', 'Edit Document'),
         ('delete_document', 'Delete Document'),
     ], default='view_document')
     pending = models.BooleanField(default=True)

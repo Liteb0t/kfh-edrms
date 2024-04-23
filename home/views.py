@@ -136,7 +136,7 @@ def DocumentDetails(request, document_id, messages=None):
         'user_permissions': {
             'view_document': request.user.has_perm("view_document", document),
             # 'add_document': request.user.has_perm("add_document", document),
-            'edit_document': request.user.has_perm("edit_document", document),
+            'change_document': request.user.has_perm("change_document", document),
             'delete_document': request.user.has_perm("delete_document", document),
         },
         'user': request.user,
@@ -151,7 +151,7 @@ def DocumentDetails(request, document_id, messages=None):
 @login_required
 def DocumentHistory(request, document_id):
     document = Document.objects.get(id=document_id)
-    audit_trail = DocumentAuditTrail.objects.filter(document=document)
+    audit_trail = DocumentAuditTrail.objects.filter(document=document).values()
 
     context = {
         'document': document,
@@ -201,7 +201,7 @@ def Upload(request):
             obj.save()
             document = Document.objects.get(id=obj.id)
             assign_perm("view_document", request.user, document)
-            assign_perm("edit_document", request.user, document)
+            assign_perm("change_document", request.user, document)
             assign_perm("delete_document", request.user, document)
             uploaded_audit_entry = DocumentAuditTrail(
                 document=document,
