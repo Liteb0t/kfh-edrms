@@ -156,7 +156,7 @@ def DocumentDetails(request, document_id, messages=None):
 @login_required
 def DocumentHistory(request, document_id):
     document = Document.objects.get(id=document_id)
-    audit_trail = DocumentAuditTrail.objects.filter(document=document).values()
+    audit_trail = DocumentAuditTrail.objects.filter(document=document).values("id", "user__username", "action", "timestamp")
 
     context = {
         'document': document,
@@ -204,11 +204,6 @@ def BranchEmployees(request, branch_id):
         'employees_at_this_branch': employees_at_this_branch,
     }
     return render(request, 'branch-employees.html', context)
-
-
-# @login_required
-# def Correspondents(request):
-#     return render(request, 'password_reset_form.html')
 
 
 @login_required

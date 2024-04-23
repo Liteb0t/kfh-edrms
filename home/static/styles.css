@@ -99,16 +99,23 @@ nav .login-button {
 
 .sub-navigation {
     display: flex;
+    background-color: #ddd;
 }
 
 .sub-navigation .entry {
-    /*! border: 2px solid #020; */
-    /*! margin: 1em 3em 1em 3em; */
-    /*! float: left; */
-    /*! display: block; */
     padding: 4px;
     border-right: 3px solid black;
     border-bottom: 3px solid black;
+}
+
+.sub-navigation a {
+    text-decoration: none;
+    color: black;
+    /* font-weight: 700; */
+}
+
+.sub-navigation a:hover {
+    background-color: #bbb;
 }
 
 .sub-navigation #before-buttons {
@@ -116,13 +123,13 @@ nav .login-button {
 }
 
 .sub-navigation #after-buttons {
-    /*! border: 5px solid aqua; */
     flex-grow: 1;
     border-right: none;
 }
 
 .sub-navigation #selected {
     border-bottom: 3px solid #bbb;
+    background-color: #fff;
 }
 
 #content-main {
