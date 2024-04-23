@@ -1,0 +1,44 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+    {{ document.id }} - {{ document.title }}
+{% endblock %}
+
+{% block content %}
+    <h2>
+        {{ document.title }} - History
+    </h2>
+    <table class="fuze-table" id="audit-trail-table"></table>
+
+    <!--Receive JSON data from view, to pass into the
+    json_data parameter of the fuze table-->
+    {{ auditTrailAsJson|json_script:"mydata" }}
+    <script src="{% static 'fuze_tables.js' %}"></script>
+    <script>
+    const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
+    documents_table = new FuzeTable("audit-trail-table",
+        {
+            title: "Audit trail"
+            ,entries_per_page: 10
+            ,json_data: jsonData
+            ,clickable_rows: true
+            ,on_row_click: onRowClick
+            ,columns: {
+                id: {
+                    visible: false
+                }
+                ,document_id: {
+                    visible: false
+                }
+            }
+        });
+
+    function onRowClick(data_entry) {
+        // window.location.href = `/documents/${jsonData[data_entry].id}/`;
+        console.log("click!");
+    }
+    </script>
+{% endblock %}
+
+

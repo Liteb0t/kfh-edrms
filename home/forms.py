@@ -1,5 +1,5 @@
 from django import forms
-from home.models import Document, DocumentAccessRequest, Employee
+from home.models import Document, DocumentAccessRequest, Employee, DocumentAuditTrail
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
@@ -16,6 +16,14 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ['title', 'file', 'criticality']
+
+
+# class AuditEntryReason(forms.ModelForm):
+#
+#     description = forms.CharField(widget=forms.Textarea)
+#     class Meta:
+#         model = DocumentAuditTrail
+#         fields = ['description']
 
 
 class DocumentAccessRequestForm(forms.ModelForm):

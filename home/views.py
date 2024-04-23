@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Permission, User
 
 from home.forms import *
-from home.models import Employee, Document, DocumentAccessRequest, Branch
+from home.models import Employee, Document, DocumentAccessRequest, Branch, DocumentAuditTrail
 import json
 from django.utils import timezone
 from guardian.shortcuts import assign_perm
@@ -119,7 +119,9 @@ def RecentlyDeletedDocuments(request):
 
 
 @login_required
-def DocumentDetails(request, document_id):
+def DocumentDetails(request, document_id, messages=None):
+    if messages is None:
+        messages = []
     document = Document.objects.get(id=document_id)
     if request.user.has_perm("view_document", document) and \
             request.user.has_perm("edit_document", document) and \
@@ -127,6 +129,7 @@ def DocumentDetails(request, document_id):
         has_all_perms = True
     else:
         has_all_perms = False
+
     context = {
         'mailto_link': document.uploaded_by.email,
         'has_all_perms': has_all_perms,
@@ -137,9 +140,24 @@ def DocumentDetails(request, document_id):
             'delete_document': request.user.has_perm("delete_document", document),
         },
         'user': request.user,
-        'document': document
+        'document': document,
+        'messages': messages
     }
+    # if document.manually_deleted:
+    #     context['messages'] = ["This document has been marked for deletion."]
     return render(request, 'document-details.html', context)
+
+
+@login_required
+def DocumentHistory(request, document_id):
+    document = Document.objects.get(id=document_id)
+    audit_trail = DocumentAuditTrail.objects.filter(document=document)
+
+    context = {
+        'document': document,
+        'auditTrailAsJson': json.dumps(list(audit_trail), default=str),
+    }
+    return render(request, 'document-history.html', context)
 
 
 def Branches(request):
@@ -185,6 +203,12 @@ def Upload(request):
             assign_perm("view_document", request.user, document)
             assign_perm("edit_document", request.user, document)
             assign_perm("delete_document", request.user, document)
+            uploaded_audit_entry = DocumentAuditTrail(
+                document=document,
+                user=request.user,
+                action="Upload",
+                description="Document uploaded for the first time.")
+            uploaded_audit_entry.save()
             return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
             # return RequestPermissions(request, obj.id)
         else:
@@ -206,6 +230,12 @@ def EditDocument(request, document_id):
                 obj = form.save(commit=False)
                 obj.uploaded_by = request.user
                 obj.save()
+                uploaded_audit_entry = DocumentAuditTrail(
+                    document=document,
+                    user=request.user,
+                    action="Edit",
+                    description="Document edited because i said so.")
+                uploaded_audit_entry.save()
                 return render(request, 'upload.html', {'form': form, 'messages': ["Edited successfully"]})
                 # return RequestPermissions(request, obj.id)
             else:
@@ -266,10 +296,15 @@ def ViewDocument(request, document_id):
 def delete_document(request, document_id):
     document = Document.objects.get(id=document_id)
     if request.user.has_perm('delete_document', document):
-        document.delete()
+        # document.delete()
+        document.manually_deleted = True
+        document.delete_at = timezone.now() + timezone.timedelta(days=30)
+        message = "Document deleted."
     else:
-        return HttpResponseForbidden("You don't have permission to delete this file.")
-    return render(request, 'delete_document.html')
+        # return HttpResponseForbidden("You don't have permission to delete this file.")
+        message = "You don't have permission to delete this document."
+
+    return DocumentDetails(request, document_id, messages=[message])
 
 
 @login_required

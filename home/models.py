@@ -47,6 +47,17 @@ class Document(models.Model):
                                    choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], default='low')
 
 
+class DocumentAuditTrail(models.Model):
+    id = models.AutoField(primary_key=True)
+
+    document = models.ForeignKey("Document", on_delete=models.CASCADE)
+    user = models.ForeignKey("Employee", on_delete=models.SET_NULL, null=True)
+
+    action = models.CharField(max_length=50, null=False, default='upload') # choices=[('upload', 'Upload'), ('edit', 'Edit'), ('delete', 'Delete')]
+    timestamp = models.DateTimeField(default=timezone.now)
+    description = models.TextField(max_length=2000)
+
+
 class DocumentAccessRequest(models.Model):
     id = models.AutoField(primary_key=True)
     reason_given = models.CharField(max_length=2000, null=True)

@@ -21,6 +21,7 @@ urlpatterns = [
     path('documents/<int:document_id>/view/', views.ViewDocument, name='view_document'),
     path('documents/<int:document_id>/request-permissions/', views.RequestPermissions, name='request_permissions'),
     path('documents/<int:document_id>/edit/', views.EditDocument, name='edit_document'),
+    path('documents/<int:document_id>/history/', views.DocumentHistory, name='document_history'),
     path('review-permission-request/<int:request_id>/', views.ReviewPermissionRequest, name='review_permission_request'),
     #path('documents/<int:document_id>/accessdenied/', views.document_access, name='access_denied'),
     # Other URL patterns
