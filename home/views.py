@@ -49,9 +49,14 @@ def index(request):
 @login_required
 def Employees(request):
     employees = Employee.objects.all().values('first_name', 'last_name', 'username', 'email', 'date_joined')
+    you = Employee.objects.get(username=request.user.username)
+    print(request.user)
+    print(request.user.id)
+    print(request.user.username)
     context = {
         'employeesAsJson': json.dumps(list(employees), default=str),
         # 'range': range(Employee.objects.all().__len__()),
+        'you': you,
     }
     return render(request, 'employees.html', context)
 
@@ -182,6 +187,23 @@ def BranchDetails(request, branch_id):
         'employees_at_this_branch': employees_at_this_branch,
     }
     return render(request, 'branch-details.html', context)
+
+
+@login_required
+def BranchEmployees(request, branch_id):
+    branch = Branch.objects.get(id=branch_id)
+    employees_at_this_branch = (Employee.objects.filter(branch_id=branch_id)
+                          .values('first_name', 'last_name', 'username', 'email', 'date_joined'))
+    print("Documents uploaded:", employees_at_this_branch)
+    if not employees_at_this_branch:
+        employees_at_this_branch = "none"
+    else:
+        employees_at_this_branch = json.dumps(list(employees_at_this_branch), default=str)
+    context = {
+        'branch': branch,
+        'employees_at_this_branch': employees_at_this_branch,
+    }
+    return render(request, 'branch-employees.html', context)
 
 
 # @login_required

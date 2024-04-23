@@ -8,23 +8,26 @@
 {% block sub-nav %}
     <div class="sub-navigation">
     <div class="entry" id="before-buttons"></div>
-    <a href="/employees/"><div class="entry" id="selected">All</div></a>
-    <a href="/branches/{{ you.branch_id }}/employees/"><div class="entry">Your branch</div></a>
+    <a href="/employees/"><div class="entry">All</div></a>
+    <a href="/branches/{{ you.branch_id }}/employees/"><div class="entry" id="selected">Your branch</div></a>
     <a href="/admin/home/employee/"><div class="entry">Manage Employees</div></a>
     <div class="entry" id="after-buttons"></div>
     </div>
 {% endblock %}
 
 {% block content %}
-    <h2>List of employees</h2>
-    <table class="fuze-table" id="employees-table"></table>
-    {{ employeesAsJson|json_script:"mydata" }}
+    <h2>Employees at {{ branch.name }}</h2>
+    <p>
+        <table class="fuze-table" id="employees_at_this_branch"></table>
+    </p>
+    {{ employees_at_this_branch|json_script:"mydata" }}
     <script src="{% static 'fuze_tables.js' %}"></script>
     <script>
     const jsonData = JSON.parse(JSON.parse(document.getElementById("mydata").textContent));
-    employees_table = new FuzeTable("employees-table",
+    documents_table = new FuzeTable("employees_at_this_branch",
         {
             title: "Employees"
+            ,entries_per_page: 10
             ,json_data: jsonData
             ,clickable_rows: true
             ,on_row_click: onRowClick
@@ -43,7 +46,6 @@
 
     function onRowClick(data_entry) {
         window.location.href = `/employees/${jsonData[data_entry].username}/`;
-        // window.location.search = "";
     }
     </script>
 {% endblock %}
