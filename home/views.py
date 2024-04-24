@@ -12,7 +12,7 @@ from home.models import Employee, Document, DocumentAccessRequest, Branch, Docum
 import json
 from django.utils import timezone
 from guardian.shortcuts import assign_perm
-from django.db.models import Q
+from django.views.decorators.clickjacking import xframe_options_exempt
 # import datetime
 
 import os
@@ -112,7 +112,9 @@ def EmployeeDetails(request, username):
 
 @login_required
 def Documents(request):
-    documents = Document.objects.all().values("id", "title", "uploaded_at", "criticality")
+    documents = (Document.objects.all()
+                 .filter(manually_deleted=False)
+                 .values("id", "title", "uploaded_at", "criticality"))
     context = {
         'documents': documents,
         'documentsAsJson': json.dumps(list(documents), default=str),
@@ -122,14 +124,13 @@ def Documents(request):
 
 @login_required
 def RecentlyUploadedDocuments(request):
-    documents = (Document.objects.all()
-                 .filter(manually_deleted=True)
-                 .values("id", "title", "delete_at"))
 
     start_date = timezone.now() - timezone.timedelta(days=31)
     end_date = timezone.now()
-    documents = (Document.objects.filter(uploaded_at__range=(start_date, end_date))
-                .values("id", "title", "uploaded_at", "criticality"))
+    documents = (Document.objects
+                 .filter(uploaded_at__range=(start_date, end_date))
+                 .filter(manually_deleted=False)
+                 .values("id", "title", "uploaded_at", "criticality"))
 
     context = {
         'documents': documents,
@@ -310,6 +311,7 @@ def EditDocument(request, document_id):
 
 
 @login_required
+@xframe_options_exempt
 def ViewDocument(request, document_id):
     document = Document.objects.get(id=document_id)
     path = document.file.name
@@ -333,6 +335,56 @@ def ViewDocument(request, document_id):
     # Serve the file
     with open(media_path, 'rb') as file:
         response = HttpResponse(file.read(), content_type=temp_content_type)
+
+    return response
+
+
+@login_required
+def PreviewDocument(request, document_id):
+    document = Document.objects.get(id=document_id)
+    path = document.file.name
+    # Check user permissions or any other access control logic here
+    if not request.user.has_perm('home.view_document', document):
+        has_permission = False
+    else:
+        has_permission = True
+
+    # Construct the full path to the media file
+    media_path = os.path.join(settings.MEDIA_ROOT, path)
+
+    # Can i do this more easily?
+    if path.endswith('.pdf'):
+        temp_content_type = "application/pdf"
+    elif path.endswith('.png'):
+        temp_content_type = "image/png"
+    elif path.endswith('.jpg'):
+        temp_content_type = "image/jpeg"
+    else:
+        temp_content_type = "application/octet-stream"
+
+    context = {
+        'document': document,
+        'has_permission': has_permission,
+        'content_type': temp_content_type,
+        'media_path': media_path,
+    }
+    return render(request, 'document-preview.html', context)
+
+
+@login_required
+def DownloadDocument(request, document_id):
+    document = Document.objects.get(id=document_id)
+    path = document.file.name
+
+    if not request.user.has_perm('home.view_document', document):
+        return HttpResponseForbidden("You don't have permission to download this file.")
+
+    # Construct the full path to the media file
+    media_path = os.path.join(settings.MEDIA_ROOT, path)
+
+    # Download the file
+    with open(media_path, 'rb') as file:
+        response = HttpResponse(file.read(), content_type="application/octet-stream")
 
     return response
 

@@ -1,0 +1,42 @@
+{% extends "master.html" %}
+
+{% block title %}
+    {{ document.id }} - {{ document.title }}
+{% endblock %}
+
+{% block sub-nav %}
+    <div class="sub-navigation">
+    <div class="entry" id="before-buttons"></div>
+    <a href="/documents/{{ document.id }}/"><div class="entry">Details</div></a>
+    <a href="/documents/{{ document.id }}/preview/"><div class="entry" id="selected">Preview</div></a>
+    <a href="/documents/{{ document.id }}/history/"><div class="entry">History</div></a>
+    <div class="entry" id="after-buttons"></div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h2>
+        {{ document.title }} - preview
+    </h2>
+    {% if not has_permission %}
+        <p>You do not have view permissions for this document.<br><br>
+        You can <a href="/documents/{{ document.id }}/request-permissions">
+                Request more permissions</a></p>
+    {% else %}
+        <p>
+            <a href="/documents/{{ document.id }}/view/">Open in new tab</a>&nbsp;
+            <a href="/documents/{{ document.id }}/view/" download>Download file</a><br>
+            <embed
+            src="/documents/{{ document.id }}/view/"
+            type="application/pdf"
+            frameBorder="0"
+            scrolling="auto"
+            width="100%"
+            style="height: 42em"
+            >
+
+        </p>
+    {% endif %}
+{% endblock %}
+
+
