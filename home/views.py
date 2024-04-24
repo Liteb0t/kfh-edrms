@@ -48,7 +48,7 @@ def IncomingRequests(request):
     pending = (DocumentAccessRequest.objects
                .filter(request_employees=request.user)
                .filter(pending=True)
-               .values("id", "request_date", "employee__username", "document__title"))
+               .values("id", "request_date", "requested_permission", "employee__username", "document__title"))
 
     if pending.count() == 0:
         pending = "None"
@@ -69,7 +69,7 @@ def OutgoingRequests(request):
     pending = (DocumentAccessRequest.objects
                .filter(employee=request.user)
                .filter(pending=True)
-               .values("request_date", "employee__username", "document__title"))
+               .values("request_date", "requested_permission", "document__title"))
 
     if pending.count() == 0:
         pending = "None"
