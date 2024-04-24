@@ -30,7 +30,7 @@ def index(request):
     pending_out = (DocumentAccessRequest.objects
                .filter(employee=request.user)
                .filter(pending=True)
-               .values("request_date", "employee__username", "document__title"))
+               .values("id", "request_date", "employee__username", "document__title"))
 
     context = {
         'username': request.user.username,
@@ -48,7 +48,7 @@ def IncomingRequests(request):
     pending = (DocumentAccessRequest.objects
                .filter(request_employees=request.user)
                .filter(pending=True)
-               .values("request_date", "employee__username", "document__title"))
+               .values("id", "request_date", "employee__username", "document__title"))
 
     context = {
         'pendingAsJson': json.dumps(list(pending), default=str),
@@ -70,7 +70,7 @@ def OutgoingRequests(request):
         'pendingAsJson': json.dumps(list(pending), default=str),
     }
 
-    return render(request, 'dashboard-incoming.html', context)
+    return render(request, 'dashboard-outgoing.html', context)
 
 
 @login_required
@@ -343,6 +343,7 @@ def delete_document(request, document_id):
         # document.delete()
         document.manually_deleted = True
         document.delete_at = timezone.now() + timezone.timedelta(days=30)
+        document.save()
         message = "Document deleted."
     else:
         # return HttpResponseForbidden("You don't have permission to delete this file.")
