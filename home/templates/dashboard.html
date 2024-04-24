@@ -5,66 +5,31 @@
     KFH - Dashboard
 {% endblock %}
 
+{% block sub-nav %}
+    <div class="sub-navigation">
+    <div class="entry" id="before-buttons"></div>
+    <a href="/"><div class="entry" id="selected">Dashboard</div></a>
+    <a href="/outgoing-requests/"><div class="entry">Your requests</div></a>
+    <a href="/incoming-requests/"><div class="entry">Requests pending review</div></a>
+    <div class="entry" id="after-buttons"></div>
+    </div>
+{% endblock %}
+
 {% block content %}
-    <h2>DASHBOARD</h2>
+    <h2>Dashboard</h2>
 
     <p>
-       Welcome to Kuwait Finance House dashboard :)
+        Welcome to Kuwait Finance House dashboard :)<br>
+        {{ documentsPendingOutgoing }} Outgoing permission requests<br>
+        {{ documentsPendingIncoming }} Incoming permission requests<br>
     </p>
 
+    <h3>Account</h3>
 
-    <table class="fuze-table" id="pending-table"></table>
+    <p>
+        Your details: <a href="/employees/{{ username }}/">click here</a><br>
+        <a href="/accounts/logout/">Log out</a><br>
+        <a href="/accounts/password_reset/">Reset password</a><br>
+    </p>
 
-    <h3>List of Recent Documents - last 30 days</h3>
-
-{#    <table class="fuze-table" id="requesting-table"></table>#}
-
-    <table class="fuze-table" id="document-table"></table>
-
- <!--Receive JSON data from view, to pass into the
-    json_data parameter of the fuze table-->
-    {{ pendingAsJson|json_script:"mydata1" }}
-    {{ documentsAsJson|json_script:"mydata2" }}
-{#    {{ testdataAsJson|json_script:"mydata" }}#}
-    <script src="{% static 'fuze_tables.js' %}"></script>
-    <script>
-    const jsonData1 = JSON.parse(JSON.parse(document.getElementById("mydata1").textContent));
-    documents_table = new FuzeTable("pending-table",
-        {
-            title: "Pending review"
-            ,json_data: jsonData1
-            ,clickable_rows: true
-            ,on_row_click: onRowClick1
-        });
-    const jsonData2 = JSON.parse(JSON.parse(document.getElementById("mydata2").textContent));
-    documents_table = new FuzeTable("document-table",
-        {
-            title: "Documents"
-            ,json_data: jsonData2
-            ,clickable_rows: true
-            ,on_row_click: onRowClick2
-            ,columns: {
-                id: {
-                    visible: false
-                }
-                ,uploaded_at: {
-                    display_name: "uploaded at"
-                }
-            }
-        });
-     {#requesting_table = new FuzeTable("requesting-table",#}
-     {#   {#}
-     {#       title: "Sent Requests"#}
-     {#       ,json_data: jsonData#}
-     {#       ,clickable_rows: true#}
-     {#       ,on_row_click: onRowClick#}
-     {#   });#}
-    function onRowClick1(data_entry) {
-        window.location.pathname = `/review-permission-request/${jsonData1[data_entry].id}/`;
-    }
-    function onRowClick2(data_entry) {
-        window.location.pathname = `/documents/${jsonData2[data_entry].id}/`;
-    }
-
-    </script>
 {% endblock %}

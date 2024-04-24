@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("outgoing-requests/", views.OutgoingRequests, name="outgoing-requests"),
+    path("incoming-requests/", views.IncomingRequests, name="incoming-requests"),
     #path("", views.Pendings, name="index"),
     path("employees/", views.Employees, name="employees"),
     # path("employees/<int:branch_id>/", views.EmployeesAtYourBranch, name="employees"),

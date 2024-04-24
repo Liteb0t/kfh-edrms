@@ -1,0 +1,43 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+    KFH - Dashboard
+{% endblock %}
+
+{% block sub-nav %}
+    <div class="sub-navigation">
+    <div class="entry" id="before-buttons"></div>
+    <a href="/"><div class="entry">Dashboard</div></a>
+    <a href="/outgoing-requests/"><div class="entry" id="selected">Your requests</div></a>
+    <a href="/incoming-requests/"><div class="entry">Requests pending review</div></a>
+    <div class="entry" id="after-buttons"></div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h2>Your permission requests</h2>
+
+    <table class="fuze-table" id="pending-table"></table>
+
+ <!--Receive JSON data from view, to pass into the
+    json_data parameter of the fuze table-->
+    {{ pendingAsJson|json_script:"mydata1" }}
+{#    {{ testdataAsJson|json_script:"mydata" }}#}
+    <script src="{% static 'fuze_tables.js' %}"></script>
+    <script>
+    const jsonData1 = JSON.parse(JSON.parse(document.getElementById("mydata1").textContent));
+    documents_table = new FuzeTable("pending-table",
+        {
+            title: "Waiting for review"
+            ,json_data: jsonData1
+            ,clickable_rows: true
+            ,on_row_click: onRowClick1
+        });
+
+    function onRowClick1(data_entry) {
+        // window.location.pathname = `/review-permission-request/${jsonData1[data_entry].id}/`;
+        alert("Waiting for approval...")
+    }
+    </script>
+{% endblock %}

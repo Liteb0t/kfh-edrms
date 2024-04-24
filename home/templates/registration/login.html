@@ -18,8 +18,7 @@
         {% endif %}
     {% endif %}
 
-    username: <b>admin</b> and<br>
-    password: <b>password</b> (for testing)
+    Kuwait Finance House login<br>
 
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
@@ -43,7 +42,7 @@
 
     {# Assumes you set up the password_reset view in your URLconf #}
     <p>
-        <a href="{% url 'admin:index' %}">Admin login</a><br>
+        <a href="{% url 'admin:index' %}">Admin portal</a><br>
         <a href="{% url 'password_reset' %}">Lost password?</a>
     </p>
 

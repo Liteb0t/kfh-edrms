@@ -5,45 +5,72 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 # from django.template import loader
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Permission, User
+# from django.contrib.auth.models import Permission, User
 
 from home.forms import *
 from home.models import Employee, Document, DocumentAccessRequest, Branch, DocumentAuditTrail
 import json
 from django.utils import timezone
 from guardian.shortcuts import assign_perm
-import datetime
+from django.db.models import Q
+# import datetime
 
 import os
 
 
 @login_required
 def index(request):
-    #documents = Document.objects.all().values()
-    # Filter records where the datetime field falls within a specific range
-    start_date = timezone.now() - timezone.timedelta(days=31)
-    end_date = timezone.now()
-    queryset = (Document.objects.filter(uploaded_at__range=(start_date, end_date))
-                .values("id", "title", "uploaded_at", "criticality"))
+    # pending = DocumentAccessRequest.objects.all()
+    # .values("requested_permission", "request_date", "employee", "document")
+    pending_in = (DocumentAccessRequest.objects
+               .filter(request_employees=request.user)
+               .filter(pending=True)
+               .values("request_date", "employee__username", "document__title"))
 
+    pending_out = (DocumentAccessRequest.objects
+               .filter(employee=request.user)
+               .filter(pending=True)
+               .values("request_date", "employee__username", "document__title"))
+
+    context = {
+        'username': request.user.username,
+        'documentsPendingIncoming': pending_in.count(),
+        'documentsPendingOutgoing': pending_out.count(),
+    }
+
+    return render(request, 'dashboard.html', context)
+
+
+@login_required
+def IncomingRequests(request):
     # pending = DocumentAccessRequest.objects.all()
     # .values("requested_permission", "request_date", "employee", "document")
     pending = (DocumentAccessRequest.objects
                .filter(request_employees=request.user)
                .filter(pending=True)
-               .values("id", "requested_permission", "request_date", "employee", "document"))
+               .values("request_date", "employee__username", "document__title"))
 
     context = {
         'pendingAsJson': json.dumps(list(pending), default=str),
-        'documents': queryset,
-        'documentsAsJson': json.dumps(list(queryset), default=str),
     }
 
-    return render(request, 'dashboard.html', context)
-    #now = datetime.now()
-    #today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
-    #today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
-    #objects = Document.objects.filter(Q(date__gte=today_min) & Q(date__lte=today_max))
+    return render(request, 'dashboard-incoming.html', context)
+
+
+@login_required
+def OutgoingRequests(request):
+    # pending = DocumentAccessRequest.objects.all()
+    # .values("requested_permission", "request_date", "employee", "document")
+    pending = (DocumentAccessRequest.objects
+               .filter(employee=request.user)
+               .filter(pending=True)
+               .values("request_date", "employee__username", "document__title"))
+
+    context = {
+        'pendingAsJson': json.dumps(list(pending), default=str),
+    }
+
+    return render(request, 'dashboard-incoming.html', context)
 
 
 @login_required
