@@ -18,6 +18,12 @@
 {% block content %}
     <h2>Permission requests pending review</h2>
 
+    {% if pendingAsJson == "None" %}
+    <p>
+        Incoming permission requests will show up here.<br>
+        click on the request to view more details, and you can approve or deny.
+    </p>
+    {% else %}
     <table class="fuze-table" id="pending-table"></table>
 
  <!--Receive JSON data from view, to pass into the
@@ -44,4 +50,5 @@
         window.location.pathname = `/review-permission-request/${jsonData1[data_entry].id}/`;
     }
     </script>
+    {% endif %}
 {% endblock %}

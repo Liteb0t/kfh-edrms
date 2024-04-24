@@ -50,8 +50,13 @@ def IncomingRequests(request):
                .filter(pending=True)
                .values("id", "request_date", "employee__username", "document__title"))
 
+    if pending.count() == 0:
+        pending = "None"
+    else:
+        pending = json.dumps(list(pending), default=str)
+
     context = {
-        'pendingAsJson': json.dumps(list(pending), default=str),
+        'pendingAsJson': pending,
     }
 
     return render(request, 'dashboard-incoming.html', context)
@@ -66,8 +71,13 @@ def OutgoingRequests(request):
                .filter(pending=True)
                .values("request_date", "employee__username", "document__title"))
 
+    if pending.count() == 0:
+        pending = "None"
+    else:
+        pending = json.dumps(list(pending), default=str)
+
     context = {
-        'pendingAsJson': json.dumps(list(pending), default=str),
+        'pendingAsJson': pending,
     }
 
     return render(request, 'dashboard-outgoing.html', context)

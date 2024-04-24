@@ -18,6 +18,12 @@
 {% block content %}
     <h2>Your permission requests</h2>
 
+    {% if pendingAsJson == "None" %}
+    <p>
+        When you request permissions to add, edit, or delete a document,
+        the requests will be listed here until they are either approved or rejected.
+    </p>
+    {% else %}
     <table class="fuze-table" id="pending-table"></table>
 
  <!--Receive JSON data from view, to pass into the
@@ -45,4 +51,5 @@
         alert("Waiting for approval...")
     }
     </script>
+    {% endif %}
 {% endblock %}
