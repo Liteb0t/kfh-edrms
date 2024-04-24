@@ -1,4 +1,4 @@
-// Fuze Tables 1.0.1 - Library to display JSON data in a table
+// Fuze Tables 1.0.2 - Library to display JSON data in a table
 // Developed by https://fuze.page/
 // License: MIT
 
@@ -510,7 +510,7 @@ class FuzeTable {
 			return 0;
 		}
 		else {
-			return (value[0] < included_data_index[0]) ? -1 : 1;
+			return (value[0].toLowerCase() < included_data_index[0].toLowerCase()) ? -1 : 1;
 		}
 	}
 
