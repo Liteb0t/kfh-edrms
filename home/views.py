@@ -246,30 +246,33 @@ def BranchEmployees(request, branch_id):
 
 @login_required
 def Upload(request):
-    # process uploaded file
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.uploaded_by = request.user
-            obj.delete_at = timezone.now() + timezone.timedelta(days=365*7)
-            obj.save()
-            document = Document.objects.get(id=obj.id)
-            assign_perm("view_document", request.user, document)
-            assign_perm("change_document", request.user, document)
-            assign_perm("delete_document", request.user, document)
-            uploaded_audit_entry = DocumentAuditTrail(
-                document=document,
-                user=request.user,
-                action="Upload",
-                description="Document uploaded for the first time.")
-            uploaded_audit_entry.save()
-            return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
-            # return RequestPermissions(request, obj.id)
+    if request.user.has_perm("home.add_document"):
+        # process uploaded file
+        if request.method == 'POST':
+            form = DocumentForm(request.POST, request.FILES)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.uploaded_by = request.user
+                obj.delete_at = timezone.now() + timezone.timedelta(days=365*7)
+                obj.save()
+                document = Document.objects.get(id=obj.id)
+                assign_perm("view_document", request.user, document)
+                assign_perm("change_document", request.user, document)
+                assign_perm("delete_document", request.user, document)
+                uploaded_audit_entry = DocumentAuditTrail(
+                    document=document,
+                    user=request.user,
+                    action="Upload",
+                    description="Document uploaded for the first time.")
+                uploaded_audit_entry.save()
+                return render(request, 'upload.html', {'form': form, 'messages': ["Uploaded successfully"]})
+                # return RequestPermissions(request, obj.id)
+            else:
+                return render(request, 'upload.html', {'form': form, 'messages': ["Upload failed"]})
         else:
-            return render(request, 'upload.html', {'form': form, 'messages': ["Upload failed"]})
+            form = DocumentForm()
     else:
-        form = DocumentForm()
+        form = "None"
     # load page normally
     return render(request, 'upload.html', {'form': form})
 
@@ -280,11 +283,12 @@ def EditDocument(request, document_id):
     if request.user.has_perm("edit_document", document):
         # process uploaded file
         if request.method == 'POST':
-            form = DocumentForm(request.POST, request.FILES)
+            form = DocumentForm(request.POST, request.FILES, instance=document)
             if form.is_valid():
-                obj = form.save(commit=False)
-                obj.uploaded_by = request.user
-                obj.save()
+                form.save()
+                # obj = form.save(commit=False)
+                # obj.uploaded_by = request.user
+                # obj.save()
                 uploaded_audit_entry = DocumentAuditTrail(
                     document=document,
                     user=request.user,
@@ -297,10 +301,9 @@ def EditDocument(request, document_id):
                 return render(request, 'upload.html', {'form': form, 'messages': ["Edit failed"]})
         else:
             form = DocumentForm(instance=document)
-        # load page normally
-        return render(request, 'upload.html', {'form': form})
     else:
-        return HttpResponseForbidden("You don't have permission to edit this document. Go back and request permissions.")
+        form = "None"
+    return render(request, 'document-edit.html', {'form': form})
 
 
 # @login_required

@@ -2,6 +2,7 @@ html {
     background-color: #465;
     height: 100%;
     margin: 0 auto;
+    min-width: 30em;
     max-width: 73em;
 }
 

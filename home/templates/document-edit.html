@@ -1,0 +1,37 @@
+{% extends "master.html" %}
+{#{% load static %}#}
+
+{% block title %}
+    KFH - Upload
+{% endblock %}
+
+{% block sub-nav %}
+    <div class="sub-navigation">
+    <div class="entry" id="before-buttons"></div>
+    <a href="/documents/{{ document.id }}/"><div class="entry">Details</div></a>
+    <a href="/documents/{{ document.id }}/edit/"><div class="entry" id="selected">Edit</div></a>
+    <a href="/documents/{{ document.id }}/preview/"><div class="entry">Preview</div></a>
+    <a href="/documents/{{ document.id }}/history/"><div class="entry">History</div></a>
+    <div class="entry" id="after-buttons"></div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h2>Edit document</h2>
+
+    {% if form == "None" %}
+    <p>
+        You do not have permission to edit documents.
+        You can <a href="/documents/{{ document.id }}/request-permissions">
+                Request more permissions</a> for this document.</p>
+    </p>
+    {% else %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+    {% endif %}
+
+{% endblock %}

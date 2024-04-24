@@ -8,10 +8,18 @@
 {% block content %}
     <h2>Upload document</h2>
 
+    {% if form == "None" %}
+    <p>
+        You do not have permission to upload documents.
+        Contact an administrator to give you permissions.
+    </p>
+    {% else %}
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
+    {% endif %}
 
 {% endblock %}
