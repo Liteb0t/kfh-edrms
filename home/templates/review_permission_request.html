@@ -9,17 +9,17 @@
     <h2>Review Permission Request</h2>
 
     <p>
-        Document: <a href="/documents/details/{{ document.file }}">{{ document.title }}</a><br>
-        Requestor: <a href="/employees/details/{{ request.employee.username }}">
-        {{ request.employee.first_name }}
-        {{ request.employee.last_name }} </a><br>
-        Requested permission: {{ request.requested_permission }}<br>
-        Request date: {{ request.request_date }}<br>
+        Document: <a href="/documents/{{ document.id }}/">{{ document.title }}</a><br>
+        Requestor: <a href="/employees/{{ permission_request.employee.username }}/">
+        {{ permission_request.employee.first_name }}
+        {{ permission_request.employee.last_name }} </a><br>
+        Requested permission: {{ permission_request.requested_permission }}<br>
+        Request date: {{ permission_request.request_date }}<br>
         Reason: <br>
-        <span style="margin-left: 20px">{{ request.reason_given }}</span>
+        <span style="margin-left: 20px">{{ permission_request.reason_given }}</span>
     </p>
 
-    <form action="/review-permission-request/{{ request.id }}/" method="post">
+    <form action="/review-permission-request/{{ permission_request.id }}/" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Submit">

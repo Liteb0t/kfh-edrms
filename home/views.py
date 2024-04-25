@@ -280,7 +280,7 @@ def Upload(request):
 @login_required
 def EditDocument(request, document_id):
     document = Document.objects.get(id=document_id)
-    if request.user.has_perm("edit_document", document):
+    if request.user.has_perm("change_document", document):
         # process uploaded file
         if request.method == 'POST':
             form = DocumentForm(request.POST, request.FILES, instance=document)
@@ -303,7 +303,7 @@ def EditDocument(request, document_id):
             form = DocumentForm(instance=document)
     else:
         form = "None"
-    return render(request, 'document-edit.html', {'form': form})
+    return render(request, 'document-edit.html', {'form': form, 'document': document})
 
 
 # @login_required
@@ -409,6 +409,12 @@ def delete_document(request, document_id):
         document.manually_deleted = True
         document.delete_at = timezone.now() + timezone.timedelta(days=30)
         document.save()
+        deleted_audit_entry = DocumentAuditTrail(
+            document=document,
+            user=request.user,
+            action="Delete",
+            description="Document deleted.")
+        deleted_audit_entry.save()
         message = "Document deleted."
     else:
         # return HttpResponseForbidden("You don't have permission to delete this file.")
@@ -459,7 +465,18 @@ def ReviewPermissionRequest(request, request_id):
                     # document.delete()
                     document.manually_deleted = True
                     document.delete_at = timezone.now() + timezone.timedelta(days=30)
+                    deleted_audit_entry = DocumentAuditTrail(
+                        document=document,
+                        user=requester,
+                        action="Delete (approved by {})".format(request.user.username),
+                        description="Document deleted after permission was granted.")
+                    deleted_audit_entry.save()
+                    document.save()
                     message = "Document deleted"
+
+                elif permission_request.requested_permission == "change_document":
+                    message = "Granted edit document permission"
+                    assign_perm(permission_request.requested_permission, requester, document)
                 else:
                     message = "Form is approved"
                     # return render(request, 'delete_document.html')
@@ -471,7 +488,7 @@ def ReviewPermissionRequest(request, request_id):
                     document.delete_at = timezone.now() + timezone.timedelta(days=30)
                     message = "Upload invalidated. Document deleted"
                 else:
-                    message = "Permission rejected"
+                    message = "Permission rejected successfully"
             else:
                 message = "Error - Invalid choice"
             if message:
@@ -484,7 +501,7 @@ def ReviewPermissionRequest(request, request_id):
     return render(request, 'review_permission_request.html',
                   {
                       "document": document,
-                      "request": permission_request,
+                      "permission_request": permission_request,
                       "requester": requester,
                       "form": form,
                       "messages": messages,
