@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # from django.core import serializers
 # from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, FileResponse
 from django.conf import settings
 # from django.template import loader
 from django.contrib.auth.decorators import login_required
@@ -286,9 +286,6 @@ def EditDocument(request, document_id):
             form = DocumentForm(request.POST, request.FILES, instance=document)
             if form.is_valid():
                 form.save()
-                # obj = form.save(commit=False)
-                # obj.uploaded_by = request.user
-                # obj.save()
                 uploaded_audit_entry = DocumentAuditTrail(
                     document=document,
                     user=request.user,
@@ -306,23 +303,6 @@ def EditDocument(request, document_id):
     return render(request, 'document-edit.html', {'form': form, 'document': document})
 
 
-# @login_required
-# def ViewProtectedFile(request, path):
-#     # Check user permissions or any other access control logic here
-#     if not request.user.has_perm('home.view_document'):
-#         return HttpResponseForbidden("You don't have permission to access this media.")
-#
-#     print("ViewProtectedFile path:", path)
-#     # Construct the full path to the media file
-#     media_path = os.path.join(settings.MEDIA_ROOT, path)
-#
-#     # Serve the file
-#     with open(media_path, 'rb') as file:
-#         response = HttpResponse(file.read(), content_type='application/octet-stream')
-#
-#     return response
-
-
 @login_required
 @xframe_options_exempt
 def ViewDocument(request, document_id):
@@ -335,21 +315,7 @@ def ViewDocument(request, document_id):
     # Construct the full path to the media file
     media_path = os.path.join(settings.MEDIA_ROOT, path)
 
-    # Can i do this more easily?
-    if path.endswith('.pdf'):
-        temp_content_type = "application/pdf"
-    elif path.endswith('.png'):
-        temp_content_type = "image/png"
-    elif path.endswith('.jpg'):
-        temp_content_type = "image/jpeg"
-    else:
-        temp_content_type = "application/octet-stream"
-
-    # Serve the file
-    with open(media_path, 'rb') as file:
-        response = HttpResponse(file.read(), content_type=temp_content_type)
-
-    return response
+    return FileResponse(open(media_path, 'rb'))
 
 
 @login_required
@@ -365,20 +331,9 @@ def PreviewDocument(request, document_id):
     # Construct the full path to the media file
     media_path = os.path.join(settings.MEDIA_ROOT, path)
 
-    # Can i do this more easily?
-    if path.endswith('.pdf'):
-        temp_content_type = "application/pdf"
-    elif path.endswith('.png'):
-        temp_content_type = "image/png"
-    elif path.endswith('.jpg'):
-        temp_content_type = "image/jpeg"
-    else:
-        temp_content_type = "application/octet-stream"
-
     context = {
         'document': document,
         'has_permission': has_permission,
-        'content_type': temp_content_type,
         'media_path': media_path,
     }
     return render(request, 'document-preview.html', context)
@@ -479,11 +434,9 @@ def ReviewPermissionRequest(request, request_id):
                     assign_perm(permission_request.requested_permission, requester, document)
                 else:
                     message = "Form is approved"
-                    # return render(request, 'delete_document.html')
             elif form.cleaned_data["choice"] == "reject":
 
                 if permission_request.requested_permission == "add_document":
-                    # document.delete()
                     document.manually_deleted = True
                     document.delete_at = timezone.now() + timezone.timedelta(days=30)
                     message = "Upload invalidated. Document deleted"
